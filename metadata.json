@@ -1,0 +1,6 @@
+{
+  "name": "Cloudflare R2 Music Player",
+  "description": "A clean, responsive music streaming website that plays audio directly from Cloudflare R2 public URLs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
