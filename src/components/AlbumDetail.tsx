@@ -20,11 +20,16 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
   const isAlbumPlaying = currentSong?.album === album.title && isPlaying;
   
   const [songDurations, setSongDurations] = useState<Record<string, string>>({});
+  const [songDurationsSec, setSongDurationsSec] = useState<Record<string, number>>({});
 
   useEffect(() => {
+    setSongDurations({});
+    setSongDurationsSec({});
     album.songs.forEach(song => {
       if (song.duration) {
         setSongDurations(prev => ({ ...prev, [song.id]: song.duration! }));
+        const [mins, secs] = song.duration.split(':').map(Number);
+        setSongDurationsSec(prev => ({ ...prev, [song.id]: mins * 60 + secs }));
       } else {
         const audio = new Audio(song.audioUrl);
         audio.addEventListener('loadedmetadata', () => {
@@ -34,10 +39,30 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
             ...prev,
             [song.id]: `${minutes}:${seconds.toString().padStart(2, '0')}`
           }));
+          setSongDurationsSec(prev => ({
+            ...prev,
+            [song.id]: audio.duration
+          }));
         });
       }
     });
   }, [album]);
+
+  const formatTotalDuration = () => {
+    if (Object.keys(songDurationsSec).length !== album.songs.length) return '';
+    let totalSecs = 0;
+    Object.values(songDurationsSec).forEach(sec => {
+      totalSecs += Number(sec);
+    });
+    const hrs = Math.floor(totalSecs / 3600);
+    const mins = Math.floor((totalSecs % 3600) / 60);
+    const secs = Math.floor(totalSecs % 60);
+    
+    if (hrs > 0) {
+      return `, ${hrs} hr ${mins} min`;
+    }
+    return `, ${mins} min ${secs} sec`;
+  };
 
   return (
     <div className="pb-8">
@@ -61,7 +86,7 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
             {album.title}
           </h1>
           <p className="text-neutral-400 text-sm font-medium md:mb-0 mb-2 flex items-center justify-center md:justify-start gap-1">
-            <span className="text-white font-bold">{album.artist}</span> • {album.releaseYear} • {album.songs.length} songs
+            <span className="text-white font-bold">{album.artist}</span> • {album.releaseYear} • {album.songs.length} songs{formatTotalDuration()}
           </p>
         </div>
       </div>
