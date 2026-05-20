@@ -82,5 +82,78 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
       }
     ]
+  },
+  {
+    id: "album-2",
+    title: "2 A.M. With Her",
+    artist: "Adit",
+    coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+    releaseYear: "2026",
+    songs: [
+      {
+        id: "song-2-1",
+        title: "2 A.M. On Your Street",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2%20A.M.%20On%20Your%20Street.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      },
+      {
+        id: "song-2-2",
+        title: "Don't make me one of the girls",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Don't%20make%20me%20one%20of%20the%20girls.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      },
+      {
+        id: "song-2-3",
+        title: "Under My Skin",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Under%20My%20Skin.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      },
+      {
+        id: "song-2-4",
+        title: "Lose Myself In You",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Lose%20Myself%20In%20You.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      },
+      {
+        id: "song-2-5",
+        title: "No More Daylight",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/No%20More%20Daylight.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      },
+      {
+        id: "song-2-6",
+        title: "Late Night Edges",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Late%20Night%20Edges.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      },
+      {
+        id: "song-2-7",
+        title: "Safe With You",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Safe%20With%20You.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      },
+      {
+        id: "song-2-8",
+        title: "After the Lights Go Out",
+        artist: "Adit",
+        album: "2 A.M. With Her",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/After%20the%20Lights%20Go%20Out.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      }
+    ]
   }
 ];

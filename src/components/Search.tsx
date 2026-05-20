@@ -129,11 +129,11 @@ export const Search: React.FC<SearchProps> = ({
                         </div>
                       </div>
                       
-                      <div className="flex flex-col min-w-0 pr-4 flex-1">
-                        <span className={`truncate leading-none mb-1 ${isThisSongPlaying ? 'text-green-500' : 'text-white'}`}>
+                      <div className="flex flex-col min-w-0 pr-4 flex-1 justify-center">
+                        <span className={`truncate text-base mb-0.5 ${isThisSongPlaying ? 'text-green-500' : 'text-white'}`}>
                           {song.title}
                         </span>
-                        <span className="text-neutral-400 text-sm truncate leading-none">
+                        <span className="text-neutral-400 text-sm truncate">
                           {song.artist}
                         </span>
                       </div>

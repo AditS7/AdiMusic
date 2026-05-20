@@ -115,11 +115,11 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
                   )}
                 </div>
                 
-                <div className="flex flex-col flex-1 min-w-0 pr-4">
-                  <span className={`truncate leading-none mb-1.5 md:mb-1 ${isThisSongPlaying ? 'text-green-500' : ''}`}>
+                <div className="flex flex-col justify-center flex-1 min-w-0 pr-4">
+                  <span className={`truncate text-base mb-0.5 ${isThisSongPlaying ? 'text-green-500' : ''}`}>
                     {song.title}
                   </span>
-                  <span className="text-neutral-400 text-sm truncate leading-none">
+                  <span className="text-neutral-400 text-sm truncate">
                     {song.artist}
                   </span>
                 </div>
