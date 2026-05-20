@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown } from 'lucide-react';
 import { Song } from '../data';
 
 interface PlayerProps {
@@ -14,6 +14,8 @@ interface PlayerProps {
   onNext: () => void;
   onPrevious: () => void;
   onVolumeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isMobilePlayerOpen: boolean;
+  setIsMobilePlayerOpen: (open: boolean) => void;
 }
 
 const formatTime = (time: number) => {
@@ -35,10 +37,21 @@ export const Player: React.FC<PlayerProps> = ({
   onNext,
   onPrevious,
   onVolumeChange,
+  isMobilePlayerOpen,
+  setIsMobilePlayerOpen,
 }) => {
   return (
-    <div className="fixed bottom-[64px] md:bottom-0 left-0 right-0 bg-neutral-900 border-t border-neutral-800 text-white p-2 md:p-4 h-16 md:h-24 flex items-center justify-between z-50">
-      {/* Left: Song Info */}
+    <>
+      <div 
+        onClick={() => {
+          if (window.innerWidth < 768 && currentSong) {
+            setIsMobilePlayerOpen(true);
+          }
+        }}
+        className="fixed bottom-[64px] md:bottom-0 left-0 right-0 bg-neutral-900 border-t border-neutral-800 text-white p-2 md:p-4 h-16 md:h-24 flex items-center justify-between z-50 transition-transform"
+        style={{ transform: isMobilePlayerOpen && window.innerWidth < 768 ? 'translateY(100%)' : 'translateY(0)' }}
+      >
+        {/* Left: Song Info */}
       <div className="flex items-center space-x-3 md:space-x-4 w-[45%] md:w-1/3 min-w-0">
         {currentSong ? (
           <>
@@ -66,11 +79,18 @@ export const Player: React.FC<PlayerProps> = ({
       {/* Center: Controls & Progress */}
       <div className="flex flex-col items-center w-[50%] md:w-1/3 max-w-xl">
         <div className="flex items-center space-x-4 md:space-x-6 mb-1 md:mb-2">
-          <button onClick={onPrevious} disabled={!currentSong} className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group">
+          <button 
+            onClick={(e) => { e.stopPropagation(); onPrevious(); }} 
+            disabled={!currentSong} 
+            className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group"
+          >
             <SkipBack className="w-5 h-5 group-active:scale-95" />
           </button>
           <button
-            onClick={onPlayPause}
+            onClick={(e) => {
+              e.stopPropagation();
+              onPlayPause();
+            }}
             disabled={!currentSong}
             className="w-8 h-8 md:w-8 md:h-8 flex items-center justify-center bg-white text-black rounded-full hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed transition active:scale-95 shadow-md flex-shrink-0"
           >
@@ -80,14 +100,18 @@ export const Player: React.FC<PlayerProps> = ({
                <Play className="w-4 h-4 fill-black translate-x-[1px]" />
             )}
           </button>
-          <button onClick={onNext} disabled={!currentSong} className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group">
+          <button 
+            onClick={(e) => { e.stopPropagation(); onNext(); }} 
+            disabled={!currentSong} 
+            className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group"
+          >
             <SkipForward className="w-5 h-5 group-active:scale-95" />
           </button>
         </div>
         
         <div className="flex items-center w-full space-x-2 md:space-x-3 text-[10px] md:text-xs text-neutral-400">
           <span>{currentSong ? formatTime(currentTime) : '-:--'}</span>
-          <div className="flex-1 group relative flex items-center h-4">
+          <div className="flex-1 group relative flex items-center h-4" onClick={(e) => e.stopPropagation()}>
             <input
               type="range"
               min="0"
@@ -123,6 +147,81 @@ export const Player: React.FC<PlayerProps> = ({
            />
          </div>
       </div>
-    </div>
+      </div>
+
+      {/* Full Screen Mobile Player */}
+      <div 
+        className={`fixed inset-0 bg-gradient-to-b from-neutral-800 to-black z-[100] transition-transform duration-300 md:hidden overflow-y-auto ${isMobilePlayerOpen ? 'translate-y-0' : 'translate-y-full'}`}
+      >
+        {currentSong && (
+          <div className="flex flex-col min-h-full px-6 pt-12 pb-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 sm:mb-8 shrink-0">
+              <button onClick={() => setIsMobilePlayerOpen(false)} className="text-white">
+                <ChevronDown className="w-8 h-8" />
+              </button>
+              <span className="text-xs font-bold tracking-widest text-white">{currentSong.album}</span>
+              <div className="w-8 h-8"></div>
+            </div>
+
+            {/* Artwork */}
+            <div className="w-full aspect-square max-w-[350px] mx-auto rounded-lg shadow-2xl overflow-hidden mb-6 sm:mb-8 mt-auto shrink-0">
+              <img src={currentSong.coverUrl} alt={currentSong.title} className="w-full h-full object-cover" />
+            </div>
+
+            {/* Song Info */}
+            <div className="flex items-center justify-between mb-4 sm:mb-6 shrink-0">
+              <div className="flex flex-col overflow-hidden pr-4">
+                <h2 className="text-2xl font-bold text-white truncate mb-1">{currentSong.title}</h2>
+                <p className="text-lg text-neutral-400 truncate">{currentSong.artist}</p>
+              </div>
+            </div>
+
+            {/* Progress */}
+            <div className="mb-4 sm:mb-6 shrink-0">
+              <div className="w-full group relative flex items-center h-4 mb-2">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={progress || 0}
+                  onChange={onSeek}
+                  className="w-full h-1.5 bg-neutral-700/50 rounded-full appearance-none cursor-pointer outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full z-10"
+                  style={{
+                    background: `linear-gradient(to right, #ffffff ${progress || 0}%, rgba(255,255,255,0.2) ${progress || 0}%)`
+                  }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-neutral-400 font-medium tracking-wide">
+                <span>{formatTime(currentTime)}</span>
+                <span>{formatTime(duration)}</span>
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div className="flex flex-col mt-auto shrink-0">
+              <div className="flex items-center justify-center gap-10 sm:pb-8">
+                <button onClick={onPrevious} className="text-white active:scale-95 transition">
+                  <SkipBack className="w-10 h-10 fill-white" />
+                </button>
+                <button
+                  onClick={onPlayPause}
+                  className="w-16 h-16 flex items-center justify-center bg-white text-black rounded-full active:scale-95 transition"
+                >
+                  {isPlaying ? (
+                     <Pause className="w-8 h-8 fill-black" />
+                  ) : (
+                     <Play className="w-8 h-8 fill-black translate-x-[2px]" />
+                  )}
+                </button>
+                <button onClick={onNext} className="text-white active:scale-95 transition">
+                  <SkipForward className="w-10 h-10 fill-white" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };

@@ -24,6 +24,7 @@ export default function App() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [isMobilePlayerOpen, setIsMobilePlayerOpen] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -57,21 +58,58 @@ export default function App() {
   // Handle playing a new song
   useEffect(() => {
     if (currentSong && audioRef.current) {
-      const isSrcChanged = audioRef.current.src !== currentSong.audioUrl;
+      const isSrcChanged = audioRef.current.getAttribute('src') !== currentSong.audioUrl;
       
       if (isSrcChanged) {
         audioRef.current.src = currentSong.audioUrl;
+        audioRef.current.load();
         setCurrentTime(0);
         setProgress(0);
       }
       
       if (isPlaying) {
-        audioRef.current.play().catch(e => console.error("Playback failed", e));
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(e => {
+            if (e.name !== 'AbortError') {
+              console.error("Playback failed", e);
+            }
+          });
+        }
       } else {
         audioRef.current.pause();
       }
     }
   }, [currentSong, isPlaying]);
+
+  useEffect(() => {
+    if ('mediaSession' in navigator && currentSong) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentSong.title,
+        artist: currentSong.artist,
+        album: currentSong.album,
+        artwork: [
+          { src: currentSong.coverUrl, sizes: '96x96', type: 'image/png' },
+          { src: currentSong.coverUrl, sizes: '128x128', type: 'image/png' },
+          { src: currentSong.coverUrl, sizes: '192x192', type: 'image/png' },
+          { src: currentSong.coverUrl, sizes: '256x256', type: 'image/png' },
+          { src: currentSong.coverUrl, sizes: '384x384', type: 'image/png' },
+          { src: currentSong.coverUrl, sizes: '512x512', type: 'image/png' },
+        ]
+      });
+
+      navigator.mediaSession.setActionHandler('play', () => setIsPlaying(true));
+      navigator.mediaSession.setActionHandler('pause', () => setIsPlaying(false));
+      navigator.mediaSession.setActionHandler('previoustrack', handlePrevious);
+      navigator.mediaSession.setActionHandler('nexttrack', handleNext);
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (details.seekTime && audioRef.current) {
+          audioRef.current.currentTime = details.seekTime;
+          setCurrentTime(details.seekTime);
+        }
+      });
+    }
+  }, [currentSong, currentIndex, currentPlaylist]);
 
   const handlePlayPause = () => {
     if (!currentSong && currentPlaylist.length > 0) {
@@ -80,14 +118,8 @@ export default function App() {
       return;
     }
     
-    if (currentSong && audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play().catch(e => console.error("Playback failed", e));
-        setIsPlaying(true);
-      }
+    if (currentSong) {
+      setIsPlaying(!isPlaying);
     }
   };
 
@@ -149,6 +181,7 @@ export default function App() {
         setCurrentIndex(0);
         setCurrentSong(album.songs[0]);
         setIsPlaying(true);
+        if (window.innerWidth < 768) setIsMobilePlayerOpen(true);
       }
     }
   };
@@ -163,6 +196,7 @@ export default function App() {
       setCurrentSong(song);
       setIsPlaying(true);
     }
+    if (window.innerWidth < 768) setIsMobilePlayerOpen(true);
   };
 
   return (
@@ -198,7 +232,7 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto pb-32 md:pb-0 mb-0 md:mb-24 md:m-2">
+      <div className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto pb-[180px] md:pb-0 mb-0 md:mb-24 md:m-2">
         {currentView === 'home' ? (
           <AlbumGrid 
             albums={albums} 
@@ -240,6 +274,8 @@ export default function App() {
         onPrevious={handlePrevious}
         volume={volume}
         onVolumeChange={handleVolumeChange}
+        isMobilePlayerOpen={isMobilePlayerOpen}
+        setIsMobilePlayerOpen={setIsMobilePlayerOpen}
       />
 
       {/* Mobile Bottom Nav */}
