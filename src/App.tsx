@@ -200,7 +200,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-black text-white font-sans overflow-hidden">
+    <div className="flex h-[100dvh] bg-black text-white font-sans overflow-hidden">
       {/* Sidebar - Desktop Only */}
       <div className="hidden md:flex flex-col w-64 bg-black p-6 gap-6">
         <div className="space-y-4">
@@ -232,7 +232,10 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto pb-[180px] md:pb-0 mb-0 md:mb-24 md:m-2">
+      <div 
+        className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto pb-[180px] md:pb-0 mb-0 md:mb-24 md:m-2"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
         {currentView === 'home' ? (
           <AlbumGrid 
             albums={albums} 

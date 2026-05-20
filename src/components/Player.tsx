@@ -151,56 +151,62 @@ export const Player: React.FC<PlayerProps> = ({
 
       {/* Full Screen Mobile Player */}
       <div 
-        className={`fixed inset-0 bg-gradient-to-b from-neutral-800 to-black z-[100] transition-transform duration-300 md:hidden overflow-y-auto ${isMobilePlayerOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`fixed inset-0 bg-gradient-to-b from-neutral-800 to-black z-[100] transition-transform duration-300 md:hidden overflow-hidden ${isMobilePlayerOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        style={{ height: '100dvh' }}
       >
         {currentSong && (
-          <div className="flex flex-col min-h-full px-6 pt-12 pb-8">
+          <div className="flex flex-col h-full px-6 pt-6 pb-8">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4 sm:mb-8 shrink-0">
-              <button onClick={() => setIsMobilePlayerOpen(false)} className="text-white">
+            <div className="flex items-center justify-between shrink-0 mb-2">
+              <button onClick={() => setIsMobilePlayerOpen(false)} className="text-white p-2 -ml-2">
                 <ChevronDown className="w-8 h-8" />
               </button>
-              <span className="text-xs font-bold tracking-widest text-white">{currentSong.album}</span>
-              <div className="w-8 h-8"></div>
+              <span className="text-[10px] sm:text-xs font-bold tracking-widest text-white uppercase text-center truncate px-2">{currentSong.album}</span>
+              <div className="w-8 h-8 shrink-0"></div>
             </div>
 
             {/* Artwork */}
-            <div className="w-full aspect-square max-w-[350px] mx-auto rounded-lg shadow-2xl overflow-hidden mb-6 sm:mb-8 mt-auto shrink-0">
-              <img src={currentSong.coverUrl} alt={currentSong.title} className="w-full h-full object-cover" />
+            <div className="flex-1 flex items-center justify-center min-h-0 w-full mb-6 mt-2">
+              <img 
+                src={currentSong.coverUrl} 
+                alt={currentSong.title} 
+                className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl" 
+              />
             </div>
 
-            {/* Song Info */}
-            <div className="flex items-center justify-between mb-4 sm:mb-6 shrink-0">
-              <div className="flex flex-col overflow-hidden pr-4">
-                <h2 className="text-2xl font-bold text-white truncate mb-1">{currentSong.title}</h2>
-                <p className="text-lg text-neutral-400 truncate">{currentSong.artist}</p>
+            {/* Bottom part */}
+            <div className="shrink-0 flex flex-col">
+              {/* Song Info */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col overflow-hidden pr-4">
+                  <h2 className="text-2xl font-bold text-white truncate mb-1">{currentSong.title}</h2>
+                  <p className="text-lg text-neutral-400 truncate">{currentSong.artist}</p>
+                </div>
               </div>
-            </div>
 
-            {/* Progress */}
-            <div className="mb-4 sm:mb-6 shrink-0">
-              <div className="w-full group relative flex items-center h-4 mb-2">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={progress || 0}
-                  onChange={onSeek}
-                  className="w-full h-1.5 bg-neutral-700/50 rounded-full appearance-none cursor-pointer outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full z-10"
-                  style={{
-                    background: `linear-gradient(to right, #ffffff ${progress || 0}%, rgba(255,255,255,0.2) ${progress || 0}%)`
-                  }}
-                />
+              {/* Progress */}
+              <div className="mb-6">
+                <div className="w-full group relative flex items-center h-4 mb-2">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={progress || 0}
+                    onChange={onSeek}
+                    className="w-full h-1.5 bg-neutral-700/50 rounded-full appearance-none cursor-pointer outline-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full z-10"
+                    style={{
+                      background: `linear-gradient(to right, #ffffff ${progress || 0}%, rgba(255,255,255,0.2) ${progress || 0}%)`
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-neutral-400 font-medium tracking-wide">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
               </div>
-              <div className="flex justify-between text-xs text-neutral-400 font-medium tracking-wide">
-                <span>{formatTime(currentTime)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
-            </div>
 
-            {/* Controls */}
-            <div className="flex flex-col mt-auto shrink-0">
-              <div className="flex items-center justify-center gap-10 sm:pb-8">
+              {/* Controls */}
+              <div className="flex items-center justify-center gap-10 mt-4 sm:mt-6 pb-4 sm:pb-8">
                 <button onClick={onPrevious} className="text-white active:scale-95 transition">
                   <SkipBack className="w-10 h-10 fill-white" />
                 </button>
