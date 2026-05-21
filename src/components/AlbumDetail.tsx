@@ -92,7 +92,7 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
       </div>
 
       {/* Action Bar */}
-      <div className="px-4 md:px-6 py-2 md:py-4 flex items-center justify-center md:justify-start space-x-6">
+      <div className="px-4 md:px-6 py-2 md:py-4 flex items-center justify-center md:justify-start space-x-6 hidden md:flex">
         <button
            onClick={() => onSongClick(album.songs[0], 0)}
            className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-black hover:scale-105 hover:bg-green-400 transition shadow-xl"
@@ -108,8 +108,7 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
       {/* Tracklist */}
       <div className="px-2 md:px-6 mt-4">
         {/* Tracklist Header */}
-        <div className="hidden md:grid grid-cols-[auto_1fr_auto] gap-4 px-4 py-2 border-b border-neutral-800 text-neutral-400 text-sm font-medium mb-3">
-          <div className="w-6 text-center">#</div>
+        <div className="hidden md:grid grid-cols-[1fr_auto] gap-4 px-4 py-2 border-b border-neutral-800 text-neutral-400 text-sm font-medium mb-3">
           <div>Title</div>
           <div className="w-12 text-right"><Clock3 className="w-4 h-4 inline-block" /></div>
         </div>
@@ -123,34 +122,33 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
               <div
                 key={song.id}
                 onClick={() => onSongClick(song, index)}
-                className="flex md:grid md:grid-cols-[auto_1fr_auto] gap-3 md:gap-4 px-2 md:px-4 py-3 rounded-md hover:bg-neutral-800 group cursor-pointer text-white items-center transition"
+                className="flex md:grid md:grid-cols-[1fr_auto] gap-3 md:gap-4 px-2 md:px-4 py-3 rounded-md hover:bg-neutral-800 group cursor-pointer text-white items-center transition"
               >
-                <div className="w-6 text-center text-neutral-400 block md:group-hover:hidden">
-                    {isThisSongPlaying && isPlaying ? (
-                       <img src="https://open.spotifycdn.com/cdn/images/equaliser-animated-green.f5eb96f2.gif" alt="playing" className="w-3 h-3 mx-auto" />
-                    ) : (
-                       <span className={isThisSongPlaying ? "text-green-500" : ""}>{index + 1}</span>
-                    )}
-                </div>
-                <div className="w-6 text-center hidden md:group-hover:block text-white">
-                  {isThisSongPlaying && isPlaying ? (
-                    <Pause className="w-4 h-4 mx-auto fill-white" />
-                  ) : (
-                    <Play className="w-4 h-4 mx-auto fill-white" />
-                  )}
-                </div>
                 
                 <div className="flex flex-col justify-center flex-1 min-w-0 pr-4">
-                  <span className={`truncate text-base mb-0.5 ${isThisSongPlaying ? 'text-green-500' : ''}`}>
-                    {song.title}
-                  </span>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className={`truncate text-base ${isThisSongPlaying ? 'text-green-500' : ''}`}>
+                      {song.title}
+                    </span>
+                    {isThisSongPlaying && isPlaying && (
+                       <img src="https://open.spotifycdn.com/cdn/images/equaliser-animated-green.f5eb96f2.gif" alt="playing" className="w-3 h-3 flex-shrink-0" />
+                    )}
+                  </div>
                   <span className="text-neutral-400 text-sm truncate">
                     {song.artist}
                   </span>
                 </div>
 
-                <div className="w-12 text-right text-neutral-400 text-sm flex-shrink-0">
+                <div className="w-12 text-right text-neutral-400 text-sm flex-shrink-0 md:group-hover:hidden flex items-center justify-end">
                   {songDurations[song.id] || "..."}
+                </div>
+                
+                <div className="hidden md:group-hover:flex w-12 items-center justify-end flex-shrink-0">
+                  {isThisSongPlaying && isPlaying ? (
+                    <Pause className="w-4 h-4 fill-white" />
+                  ) : (
+                    <Play className="w-4 h-4 fill-white" />
+                  )}
                 </div>
               </div>
             );

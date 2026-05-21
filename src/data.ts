@@ -19,14 +19,14 @@ export interface Album {
 
 export const albums: Album[] = [
   {
-    id: "album-1",
+    id: "Woolwich to Brixton",
     title: "Woolwich to Brixton",
     artist: "Adit",
     coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
     releaseYear: "2026",
     songs: [
       {
-        id: "song-1",
+        id: "London raised me",
         title: "London raised me",
         artist: "Adit",
         album: "Woolwich to Brixton",
@@ -34,7 +34,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
       },
       {
-        id: "song-2",
+        id: "Cold In The Ends",
         title: "Cold In The Ends",
         artist: "Adit",
         album: "Woolwich to Brixton",
@@ -42,7 +42,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
       },
       {
-        id: "song-3",
+        id: "Off These Chains",
         title: "Off These Chains",
         artist: "Adit",
         album: "Woolwich to Brixton",
@@ -50,7 +50,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
       },
       {
-        id: "song-4",
+        id: "Late Shift Profits",
         title: "Late Shift Profits",
         artist: "Adit",
         album: "Woolwich to Brixton",
@@ -58,7 +58,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
       },
       {
-        id: "song-5",
+        id: "South of the River Riddim",
         title: "South of the River Riddim",
         artist: "Adit",
         album: "Woolwich to Brixton",
@@ -66,7 +66,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
       },
       {
-        id: "song-6",
+        id: "Cold Shoulders, Closed Heart",
         title: "Cold Shoulders, Closed Heart",
         artist: "Adit",
         album: "Woolwich to Brixton",
@@ -74,7 +74,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
       },
       {
-        id: "song-7",
+        id: "Ice on Quiet Roads",
         title: "Ice on Quiet Roads",
         artist: "Adit",
         album: "Woolwich to Brixton",
@@ -84,14 +84,14 @@ export const albums: Album[] = [
     ]
   },
   {
-    id: "album-2",
+    id: "2 A.M. With Her",
     title: "2 A.M. With Her",
     artist: "Adit",
     coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
     releaseYear: "2026",
     songs: [
       {
-        id: "song-2-1",
+        id: "2 A.M. On Your Street",
         title: "2 A.M. On Your Street",
         artist: "Adit",
         album: "2 A.M. With Her",
@@ -99,7 +99,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
       },
       {
-        id: "song-2-2",
+        id: "Don't make me one of the girls",
         title: "Don't make me one of the girls",
         artist: "Adit",
         album: "2 A.M. With Her",
@@ -107,7 +107,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
       },
       {
-        id: "song-2-3",
+        id: "Under My Skin",
         title: "Under My Skin",
         artist: "Adit",
         album: "2 A.M. With Her",
@@ -115,7 +115,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
       },
       {
-        id: "song-2-4",
+        id: "Lose Myself In You",
         title: "Lose Myself In You",
         artist: "Adit",
         album: "2 A.M. With Her",
@@ -123,7 +123,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
       },
       {
-        id: "song-2-5",
+        id: "No More Daylight",
         title: "No More Daylight",
         artist: "Adit",
         album: "2 A.M. With Her",
@@ -131,7 +131,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
       },
       {
-        id: "song-2-6",
+        id: "Late Night Edges",
         title: "Late Night Edges",
         artist: "Adit",
         album: "2 A.M. With Her",
@@ -139,7 +139,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
       },
       {
-        id: "song-2-7",
+        id: "Safe With You",
         title: "Safe With You",
         artist: "Adit",
         album: "2 A.M. With Her",
@@ -147,7 +147,7 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
       },
       {
-        id: "song-2-8",
+        id: "After the Lights Go Out",
         title: "After the Lights Go Out",
         artist: "Adit",
         album: "2 A.M. With Her",

@@ -36,7 +36,7 @@ export const AlbumGrid: React.FC<AlbumGridProps> = ({
                   alt={album.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute right-2 bottom-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="hidden md:block absolute right-2 bottom-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                   <button
                      className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-black hover:scale-105 hover:bg-green-400 shadow-xl"
                      onClick={(e) => {

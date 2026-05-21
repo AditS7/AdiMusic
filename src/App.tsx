@@ -5,6 +5,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Home, Library, Search } from 'lucide-react';
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { AlbumGrid } from './components/AlbumGrid';
 import { AlbumDetail } from './components/AlbumDetail';
 import { Player } from './components/Player';
@@ -12,8 +13,8 @@ import { Search as SearchView } from './components/Search';
 import { albums, Album, Song } from './data';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'album' | 'search'>('home');
-  const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
   
   // Player state
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
@@ -165,8 +166,7 @@ export default function App() {
   };
 
   const handleAlbumClick = (album: Album) => {
-    setSelectedAlbum(album);
-    setCurrentView('album');
+    navigate(`/album/${album.id}`);
   };
 
   const handlePlayAlbum = (album: Album) => {
@@ -195,21 +195,54 @@ export default function App() {
     } else {
       setCurrentSong(song);
       setIsPlaying(true);
+      if (location.pathname.startsWith('/album/')) {
+        navigate(`/album/${encodeURIComponent(song.album)}/song/${encodeURIComponent(song.id)}`, { replace: true });
+      }
     }
     if (window.innerWidth < 768) setIsMobilePlayerOpen(true);
   };
+
+  useEffect(() => {
+    if (currentSong) {
+      if (location.pathname.startsWith('/album/')) {
+        const currentAlbumEncoded = encodeURIComponent(currentSong.album);
+        const currentSongEncoded = encodeURIComponent(currentSong.id);
+        const expectedPath = `/album/${currentAlbumEncoded}/song/${currentSongEncoded}`;
+        if (location.pathname !== expectedPath) {
+          navigate(expectedPath, { replace: true });
+        }
+      }
+    }
+  }, [currentSong, currentIndex]);
+
+  useEffect(() => {
+    const match = location.pathname.match(/^\/album\/([^/]+)\/song\/([^/]+)$/);
+    if (match && !currentSong) {
+      const albumId = decodeURIComponent(match[1]);
+      const songId = decodeURIComponent(match[2]);
+      const album = albums.find(a => a.id === albumId);
+      if (album) {
+        const songIndex = album.songs.findIndex(s => s.id === songId);
+        if (songIndex !== -1) {
+          setCurrentPlaylist(album.songs);
+          setCurrentIndex(songIndex);
+          setCurrentSong(album.songs[songIndex]);
+        }
+      }
+    }
+  }, []); // Run on mount to check if direct song link
 
   return (
     <div className="flex h-[100dvh] bg-black text-white font-sans overflow-hidden">
       {/* Sidebar - Desktop Only */}
       <div className="hidden md:flex flex-col w-64 bg-black p-6 gap-6">
         <div className="space-y-4">
-          <a href="#" onClick={() => setCurrentView('home')} className={`flex items-center gap-4 font-semibold hover:text-white transition ${currentView === 'home' ? 'text-white' : 'text-neutral-400'}`}>
+          <Link to="/" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/' ? 'text-white' : 'text-neutral-400'}`}>
             <Home className="w-6 h-6" /> Home
-          </a>
-          <a href="#" onClick={() => setCurrentView('search')} className={`flex items-center gap-4 font-semibold hover:text-white transition ${currentView === 'search' ? 'text-white' : 'text-neutral-400'}`}>
+          </Link>
+          <Link to="/search" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/search' ? 'text-white' : 'text-neutral-400'}`}>
             <Search className="w-6 h-6" /> Search
-          </a>
+          </Link>
         </div>
         
         <div className="mt-4 pt-4 border-t border-neutral-800">
@@ -222,7 +255,7 @@ export default function App() {
               <p 
                 key={`lib-${album.id}`}
                 onClick={() => handleAlbumClick(album)} 
-                className="text-sm text-neutral-400 hover:text-white cursor-pointer truncate"
+                className={`text-sm hover:text-white cursor-pointer truncate ${location.pathname.startsWith(`/album/${encodeURIComponent(album.id)}`) ? 'text-white font-medium' : 'text-neutral-400'}`}
               >
                 {album.title}
               </p>
@@ -236,32 +269,45 @@ export default function App() {
         className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto pb-[180px] md:pb-0 mb-0 md:mb-24 md:m-2"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        {currentView === 'home' ? (
-          <AlbumGrid 
-            albums={albums} 
-            onAlbumClick={handleAlbumClick} 
-            onPlayAlbumClick={handlePlayAlbum}
-            currentSong={currentSong}
-            isPlaying={isPlaying}
-          />
-        ) : currentView === 'search' ? (
-          <SearchView 
-            albums={albums} 
-            onAlbumClick={handleAlbumClick} 
-            onPlayAlbumClick={handlePlayAlbum}
-            onSongClick={(song, index, playlist) => handleSongClick(song, index, playlist)}
-            currentSong={currentSong}
-            isPlaying={isPlaying}
-          />
-        ) : selectedAlbum ? (
-          <AlbumDetail 
-            album={selectedAlbum} 
-            onBack={() => setCurrentView('home')} 
-            onSongClick={(song, index) => handleSongClick(song, index, selectedAlbum.songs)}
-            currentSong={currentSong}
-            isPlaying={isPlaying}
-          />
-        ) : null}
+        <Routes>
+          <Route path="/" element={
+            <AlbumGrid 
+              albums={albums} 
+              onAlbumClick={handleAlbumClick} 
+              onPlayAlbumClick={handlePlayAlbum}
+              currentSong={currentSong}
+              isPlaying={isPlaying}
+            />
+          } />
+          <Route path="/search" element={
+            <SearchView 
+              albums={albums} 
+              onAlbumClick={handleAlbumClick} 
+              onPlayAlbumClick={handlePlayAlbum}
+              onSongClick={(song, index, playlist) => handleSongClick(song, index, playlist)}
+              currentSong={currentSong}
+              isPlaying={isPlaying}
+            />
+          } />
+          <Route path="/album/:id" element={
+            <AlbumDetailWrapper 
+              albums={albums}
+              onBack={() => navigate(-1)} 
+              onSongClick={(song, index, albumSongs) => handleSongClick(song, index, albumSongs)}
+              currentSong={currentSong}
+              isPlaying={isPlaying}
+            />
+          } />
+          <Route path="/album/:id/song/:songId" element={
+            <AlbumDetailWrapper 
+              albums={albums}
+              onBack={() => navigate(-1)} 
+              onSongClick={(song, index, albumSongs) => handleSongClick(song, index, albumSongs)}
+              currentSong={currentSong}
+              isPlaying={isPlaying}
+            />
+          } />
+        </Routes>
       </div>
 
       {/* Sticky Player */}
@@ -283,19 +329,48 @@ export default function App() {
 
       {/* Mobile Bottom Nav */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] bg-neutral-900/95 backdrop-blur-md border-t border-neutral-800 flex justify-around items-center z-50 px-2 pb-safe">
-        <button onClick={() => setCurrentView('home')} className={`flex flex-col items-center gap-1.5 ${currentView === 'home' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
+        <Link to="/" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
           <Home className="w-6 h-6" />
           <span className="text-[10px] font-medium leading-none">Home</span>
-        </button>
-        <button onClick={() => setCurrentView('search')} className={`flex flex-col items-center gap-1.5 ${currentView === 'search' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
+        </Link>
+        <Link to="/search" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/search' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
           <Search className="w-6 h-6" />
           <span className="text-[10px] font-medium leading-none">Search</span>
-        </button>
+        </Link>
         <button className="flex flex-col items-center gap-1.5 text-neutral-500 hover:text-white transition-colors">
           <Library className="w-6 h-6" />
           <span className="text-[10px] font-medium leading-none">Library</span>
         </button>
       </div>
     </div>
+  );
+}
+
+// Helper wrapper component for AlbumDetail to grab the :id from params
+import { useParams } from 'react-router-dom';
+
+function AlbumDetailWrapper({ albums, onBack, onSongClick, currentSong, isPlaying }: { albums: Album[], onBack: () => void, onSongClick: (song: Song, index: number, albumSongs: Song[]) => void, currentSong: Song | null, isPlaying: boolean }) {
+  const { id } = useParams<{ id: string }>();
+  const album = albums.find(a => a.id === id);
+
+  if (!album) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-neutral-400">
+        <p>Album not found</p>
+        <button onClick={onBack} className="mt-4 px-4 py-2 bg-white text-black rounded-full text-sm font-semibold hover:scale-105 transition">
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <AlbumDetail 
+      album={album} 
+      onBack={onBack} 
+      onSongClick={(song, index) => onSongClick(song, index, album.songs)}
+      currentSong={currentSong}
+      isPlaying={isPlaying}
+    />
   );
 }
