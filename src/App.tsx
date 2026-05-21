@@ -381,6 +381,14 @@ export default function App() {
     }
   }, [currentSong, currentIndex]);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
+
   useEffect(() => {
     const match = location.pathname.match(/^\/album\/([^/]+)\/song\/([^/]+)$/);
     if (match && !currentSong) {
@@ -433,6 +441,7 @@ export default function App() {
   
         {/* Main Content */}
         <div 
+          ref={scrollRef}
           className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto mb-0 md:m-2"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
