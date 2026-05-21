@@ -148,7 +148,7 @@ export default function App() {
   // Handle playing a new song
   useEffect(() => {
     if (currentSong && audioRef.current) {
-      const isSrcChanged = audioRef.current.getAttribute('src') !== currentSong.audioUrl;
+      const isSrcChanged = audioRef.current.getAttribute('src') !== currentSong.audioUrl && audioRef.current.src !== currentSong.audioUrl;
       
       if (isSrcChanged) {
         audioRef.current.src = currentSong.audioUrl;
@@ -158,16 +158,20 @@ export default function App() {
       }
       
       if (isPlaying) {
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(e => {
-            if (e.name !== 'AbortError') {
-              console.error("Playback failed", e);
-            }
-          });
+        if (audioRef.current.paused) {
+          const playPromise = audioRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(e => {
+              if (e.name !== 'AbortError') {
+                console.error("Playback failed", e);
+              }
+            });
+          }
         }
       } else {
-        audioRef.current.pause();
+        if (!audioRef.current.paused) {
+          audioRef.current.pause();
+        }
       }
     }
   }, [currentSong, isPlaying]);
@@ -203,12 +207,25 @@ export default function App() {
 
   const handlePlayPause = () => {
     if (!currentSong && currentPlaylist.length > 0) {
-      setCurrentSong(currentPlaylist[0]);
+      const firstSong = currentPlaylist[0];
+      if (audioRef.current) {
+        if (audioRef.current.src !== firstSong.audioUrl && audioRef.current.getAttribute('src') !== firstSong.audioUrl) {
+          audioRef.current.src = firstSong.audioUrl;
+          audioRef.current.load();
+        }
+        audioRef.current.play().catch(console.error);
+      }
+      setCurrentSong(firstSong);
       setIsPlaying(true);
       return;
     }
     
-    if (currentSong) {
+    if (currentSong && audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(console.error);
+      }
       setIsPlaying(!isPlaying);
     }
   };
@@ -230,6 +247,11 @@ export default function App() {
             setProgress(0);
           }
         } else {
+          if (audioRef.current) {
+            audioRef.current.src = currentPlaylist[nextIndex].audioUrl;
+            audioRef.current.load();
+            audioRef.current.play().catch(console.error);
+          }
           setCurrentIndex(nextIndex);
           setCurrentSong(currentPlaylist[nextIndex]);
           setIsPlaying(true);
@@ -261,6 +283,11 @@ export default function App() {
             setProgress(0);
           }
         } else {
+          if (audioRef.current) {
+            audioRef.current.src = currentPlaylist[nextIndex].audioUrl;
+            audioRef.current.load();
+            audioRef.current.play().catch(console.error);
+          }
           setCurrentIndex(nextIndex);
           setCurrentSong(currentPlaylist[nextIndex]);
           setIsPlaying(true);
@@ -291,6 +318,11 @@ export default function App() {
             setProgress(0);
           }
         } else {
+          if (audioRef.current) {
+            audioRef.current.src = currentPlaylist[prevIndex].audioUrl;
+            audioRef.current.load();
+            audioRef.current.play().catch(console.error);
+          }
           setCurrentIndex(prevIndex);
           setCurrentSong(currentPlaylist[prevIndex]);
           setIsPlaying(true);
@@ -305,6 +337,11 @@ export default function App() {
             setProgress(0);
           }
         } else {
+          if (audioRef.current) {
+            audioRef.current.src = currentPlaylist[prevIndex].audioUrl;
+            audioRef.current.load();
+            audioRef.current.play().catch(console.error);
+          }
           setCurrentIndex(prevIndex);
           setCurrentSong(currentPlaylist[prevIndex]);
           setIsPlaying(true);
@@ -343,6 +380,11 @@ export default function App() {
       if (isAlreadyPlayingThisAlbum && currentSong) {
         handlePlayPause();
       } else {
+        if (audioRef.current) {
+          audioRef.current.src = album.songs[0].audioUrl;
+          audioRef.current.load();
+          audioRef.current.play().catch(console.error);
+        }
         setCurrentPlaylist(album.songs);
         setCurrentIndex(0);
         setCurrentSong(album.songs[0]);
@@ -359,6 +401,11 @@ export default function App() {
     if (currentSong?.id === song.id) {
       handlePlayPause();
     } else {
+      if (audioRef.current) {
+        audioRef.current.src = song.audioUrl;
+        audioRef.current.load();
+        audioRef.current.play().catch(console.error);
+      }
       setCurrentSong(song);
       setIsPlaying(true);
       if (location.pathname.startsWith('/album/')) {
@@ -380,14 +427,6 @@ export default function App() {
       }
     }
   }, [currentSong, currentIndex]);
-
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo(0, 0);
-    }
-  }, [location.pathname]);
 
   useEffect(() => {
     const match = location.pathname.match(/^\/album\/([^/]+)\/song\/([^/]+)$/);
@@ -441,7 +480,7 @@ export default function App() {
   
         {/* Main Content */}
         <div 
-          ref={scrollRef}
+          id="main-scroll-container"
           className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto mb-0 md:m-2"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >

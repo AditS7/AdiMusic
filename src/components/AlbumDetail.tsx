@@ -50,6 +50,13 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
   }, [album.coverUrl]);
 
 
+  useEffect(() => {
+    const scrollContainer = document.getElementById('main-scroll-container');
+    if (scrollContainer) {
+      scrollContainer.scrollTo(0, 0);
+    }
+  }, [album.id]);
+
   const handleShare = (e: React.MouseEvent, type: 'album' | 'song', id?: string) => {
     e.stopPropagation();
     let url = window.location.origin;
