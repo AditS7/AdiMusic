@@ -10,6 +10,7 @@ import { AlbumGrid } from './components/AlbumGrid';
 import { AlbumDetail } from './components/AlbumDetail';
 import { Player } from './components/Player';
 import { Search as SearchView } from './components/Search';
+import { LibraryView } from './components/Library';
 import { albums, Album, Song } from './data';
 
 export default function App() {
@@ -478,12 +479,15 @@ export default function App() {
             <Link to="/search" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/search' ? 'text-white' : 'text-neutral-400'}`}>
               <Search className="w-6 h-6" /> Search
             </Link>
+            <Link to="/library" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/library' ? 'text-white' : 'text-neutral-400'}`}>
+              <Library className="w-6 h-6" /> Library
+            </Link>
           </div>
           
           <div className="mt-4 pt-4 border-t border-neutral-800">
-            <a href="#" className="flex items-center gap-4 font-semibold text-neutral-400 hover:text-white transition mb-4">
-              <Library className="w-6 h-6" /> Your Library
-            </a>
+            <h2 className="px-1 text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4">
+              Albums
+            </h2>
             {/* Library list placeholder */}
             <div className="space-y-3 overflow-y-auto max-h-64 scrollbar-hide">
               {albums.map(album => (
@@ -520,6 +524,14 @@ export default function App() {
                 albums={albums} 
                 onAlbumClick={handleAlbumClick} 
                 onPlayAlbumClick={handlePlayAlbum}
+                onSongClick={(song, index, playlist) => handleSongClick(song, index, playlist)}
+                currentSong={currentSong}
+                isPlaying={isPlaying}
+              />
+            } />
+            <Route path="/library" element={
+              <LibraryView 
+                albums={albums}
                 onSongClick={(song, index, playlist) => handleSongClick(song, index, playlist)}
                 currentSong={currentSong}
                 isPlaying={isPlaying}
@@ -586,10 +598,10 @@ export default function App() {
             <Search className="w-6 h-6" />
             <span className="text-[10px] font-medium leading-none">Search</span>
           </Link>
-          <button className="flex flex-col items-center gap-1.5 text-neutral-500 hover:text-white transition-colors">
+          <Link to="/library" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/library' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
             <Library className="w-6 h-6" />
             <span className="text-[10px] font-medium leading-none">Library</span>
-          </button>
+          </Link>
         </div>
       </div>
     </div>
