@@ -125,6 +125,18 @@ export default function App() {
     const updateTime = () => {
       setCurrentTime(audio.currentTime);
       setProgress((audio.currentTime / audio.duration) * 100 || 0);
+      
+      if ('mediaSession' in navigator && !isNaN(audio.duration) && isFinite(audio.duration)) {
+        try {
+          navigator.mediaSession.setPositionState({
+            duration: audio.duration,
+            playbackRate: audio.playbackRate || 1,
+            position: audio.currentTime
+          });
+        } catch (e) {
+          // ignore
+        }
+      }
     };
 
     const updateDuration = () => setDuration(audio.duration);
@@ -147,6 +159,10 @@ export default function App() {
 
   // Handle playing a new song
   useEffect(() => {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+    }
+    
     if (currentSong && audioRef.current) {
       const isSrcChanged = audioRef.current.getAttribute('src') !== currentSong.audioUrl && audioRef.current.src !== currentSong.audioUrl;
       
@@ -195,10 +211,33 @@ export default function App() {
       navigator.mediaSession.setActionHandler('pause', () => setIsPlaying(false));
       navigator.mediaSession.setActionHandler('previoustrack', handlePrevious);
       navigator.mediaSession.setActionHandler('nexttrack', handleNext);
+      navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+        if (audioRef.current) {
+          const skipTime = details.seekOffset || 10;
+          audioRef.current.currentTime = Math.max(audioRef.current.currentTime - skipTime, 0);
+          setCurrentTime(audioRef.current.currentTime);
+        }
+      });
+      navigator.mediaSession.setActionHandler('seekforward', (details) => {
+        if (audioRef.current && duration) {
+          const skipTime = details.seekOffset || 10;
+          audioRef.current.currentTime = Math.min(audioRef.current.currentTime + skipTime, duration);
+          setCurrentTime(audioRef.current.currentTime);
+        }
+      });
       navigator.mediaSession.setActionHandler('seekto', (details) => {
-        if (details.seekTime && audioRef.current) {
+        if (details.seekTime !== undefined && details.seekTime !== null && audioRef.current) {
           audioRef.current.currentTime = details.seekTime;
           setCurrentTime(details.seekTime);
+        }
+      });
+      navigator.mediaSession.setActionHandler('stop', () => {
+        setIsPlaying(false);
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+          setCurrentTime(0);
+          setProgress(0);
         }
       });
     }
