@@ -5,7 +5,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Home, Library, Search } from 'lucide-react';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { AlbumGrid } from './components/AlbumGrid';
 import { AlbumDetail } from './components/AlbumDetail';
 import { Player } from './components/Player';
@@ -347,7 +347,6 @@ export default function App() {
 }
 
 // Helper wrapper component for AlbumDetail to grab the :id from params
-import { useParams } from 'react-router-dom';
 
 function AlbumDetailWrapper({ albums, onBack, onSongClick, currentSong, isPlaying }: { albums: Album[], onBack: () => void, onSongClick: (song: Song, index: number, albumSongs: Song[]) => void, currentSong: Song | null, isPlaying: boolean }) {
   const { id } = useParams<{ id: string }>();
