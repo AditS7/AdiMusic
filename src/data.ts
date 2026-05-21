@@ -174,5 +174,71 @@ export const albums: Album[] = [
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.jpg",
       }
     ]
+  },
+  {
+    id: "All or Nothing",
+    title: "All or Nothing",
+    artist: "Adit",
+    coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+    releaseYear: "2025",
+    type: "Album",
+    songs: [
+      {
+        id: "Song of a breaking heart",
+        title: "Song of a breaking heart",
+        artist: "Adit",
+        album: "All or Nothing",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Song%20of%20a%20breaking%20heart.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      },
+      {
+        id: "I Will Take It All",
+        title: "I Will Take It All",
+        artist: "Adit",
+        album: "All or Nothing",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/I%20Will%20Take%20It%20All.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      },
+      {
+        id: "Far Apart",
+        title: "Far Apart",
+        artist: "Adit",
+        album: "All or Nothing",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Far%20Apart.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      },
+      {
+        id: "Lighting Up the Heavens",
+        title: "Lighting Up the Heavens",
+        artist: "Adit",
+        album: "All or Nothing",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Lighting%20Up%20the%20Heavens.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      },
+      {
+        id: "Underneath the Neon Glow",
+        title: "Underneath the Neon Glow",
+        artist: "Adit",
+        album: "All or Nothing",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Underneath%20the%20Neon%20Glow.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      },
+      {
+        id: "Between Love and Rejection",
+        title: "Between Love and Rejection",
+        artist: "Adit",
+        album: "All or Nothing",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Between%20Love%20and%20Rejection.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      },
+      {
+        id: "Set me alive",
+        title: "Set me alive",
+        artist: "Adit",
+        album: "All or Nothing",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Set%20me%20alive.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      }
+    ]
   }
 ];
