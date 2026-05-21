@@ -118,13 +118,7 @@ export const LibraryView: React.FC<LibraryProps> = ({
   }, [sortedSongs]);
 
   return (
-    <div className="bg-black min-h-full pb-6 md:pb-8 relative w-full select-none">
-      {/* Background Gradient */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-[300px] md:h-[400px] z-0 opacity-40 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, #10b981 0%, rgba(0,0,0,0) 100%)' }}
-      />
-
+    <div className="bg-neutral-900 min-h-full pb-6 md:pb-8 relative w-full select-none">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center md:items-end px-4 md:px-6 pt-12 md:pt-16 pb-6 relative z-10 gap-6">
         {/* Collage Artwork Cover */}
