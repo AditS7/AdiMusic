@@ -26,8 +26,75 @@ export default function App() {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMobilePlayerOpen, setIsMobilePlayerOpen] = useState(false);
+  const [isShuffle, setIsShuffle] = useState(false);
+  const [repeatMode, setRepeatMode] = useState<'none' | 'all' | 'one'>('all');
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isShuffleRef = useRef(false);
+  const repeatModeRef = useRef<'none' | 'all' | 'one'>('all');
+  const currentIndexRef = useRef(0);
+  const currentPlaylistRef = useRef<Song[]>([]);
+  const currentSongRef = useRef<Song | null>(null);
+  const handleEndedTriggerRef = useRef<() => void>(() => {});
+
+  // Synchronize state values to refs for the Audio callbacks
+  useEffect(() => { isShuffleRef.current = isShuffle; }, [isShuffle]);
+  useEffect(() => { repeatModeRef.current = repeatMode; }, [repeatMode]);
+  useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
+  useEffect(() => { currentPlaylistRef.current = currentPlaylist; }, [currentPlaylist]);
+  useEffect(() => { currentSongRef.current = currentSong; }, [currentSong]);
+
+  const handleEndedTrigger = () => {
+    const loopMode = repeatModeRef.current;
+    const shuffleOn = isShuffleRef.current;
+    const playlist = currentPlaylistRef.current;
+    const idx = currentIndexRef.current;
+
+    if (playlist.length === 0) return;
+
+    if (loopMode === 'one') {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(err => console.error(err));
+        setCurrentTime(0);
+        setProgress(0);
+      }
+    } else if (shuffleOn) {
+      let nextIndex = idx;
+      if (playlist.length > 1) {
+        while (nextIndex === idx) {
+          nextIndex = Math.floor(Math.random() * playlist.length);
+        }
+      }
+      setCurrentIndex(nextIndex);
+      setCurrentSong(playlist[nextIndex]);
+      setIsPlaying(true);
+    } else {
+      if (idx === playlist.length - 1) {
+        if (loopMode === 'none') {
+          setIsPlaying(false);
+          if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+          }
+          setCurrentTime(0);
+          setProgress(0);
+        } else {
+          setCurrentIndex(0);
+          setCurrentSong(playlist[0]);
+          setIsPlaying(true);
+        }
+      } else {
+        setCurrentIndex(idx + 1);
+        setCurrentSong(playlist[idx + 1]);
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleEndedTriggerRef.current = handleEndedTrigger;
+  });
 
   // Initialize audio element
   useEffect(() => {
@@ -42,7 +109,9 @@ export default function App() {
 
     const updateDuration = () => setDuration(audio.duration);
     
-    const handleEnded = () => handleNext();
+    const handleEnded = () => {
+      handleEndedTriggerRef.current();
+    };
 
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
@@ -54,7 +123,7 @@ export default function App() {
       audio.removeEventListener('ended', handleEnded);
       audio.pause();
     };
-  }, [currentIndex, currentPlaylist]); // Re-bind handleEnded with fresh state
+  }, []); // Bind listeners exactly once on mount
 
   // Handle playing a new song
   useEffect(() => {
@@ -126,10 +195,38 @@ export default function App() {
 
   const handleNext = () => {
     if (currentPlaylist.length > 0) {
-      const nextIndex = (currentIndex + 1) % currentPlaylist.length;
-      setCurrentIndex(nextIndex);
-      setCurrentSong(currentPlaylist[nextIndex]);
-      setIsPlaying(true);
+      if (isShuffle) {
+        let nextIndex = currentIndex;
+        if (currentPlaylist.length > 1) {
+          while (nextIndex === currentIndex) {
+            nextIndex = Math.floor(Math.random() * currentPlaylist.length);
+          }
+        }
+        setCurrentIndex(nextIndex);
+        setCurrentSong(currentPlaylist[nextIndex]);
+        setIsPlaying(true);
+      } else {
+        if (currentIndex === currentPlaylist.length - 1) {
+          if (repeatMode === 'none') {
+            setIsPlaying(false);
+            if (audioRef.current) {
+              audioRef.current.pause();
+              audioRef.current.currentTime = 0;
+            }
+            setCurrentTime(0);
+            setProgress(0);
+          } else {
+            setCurrentIndex(0);
+            setCurrentSong(currentPlaylist[0]);
+            setIsPlaying(true);
+          }
+        } else {
+          const nextIndex = currentIndex + 1;
+          setCurrentIndex(nextIndex);
+          setCurrentSong(currentPlaylist[nextIndex]);
+          setIsPlaying(true);
+        }
+      }
     }
   };
 
@@ -138,6 +235,18 @@ export default function App() {
       if (currentTime > 3 && audioRef.current) {
         // If more than 3 seconds in, just restart song
         audioRef.current.currentTime = 0;
+        setCurrentTime(0);
+        setProgress(0);
+      } else if (isShuffle) {
+        let prevIndex = currentIndex;
+        if (currentPlaylist.length > 1) {
+          while (prevIndex === currentIndex) {
+            prevIndex = Math.floor(Math.random() * currentPlaylist.length);
+          }
+        }
+        setCurrentIndex(prevIndex);
+        setCurrentSong(currentPlaylist[prevIndex]);
+        setIsPlaying(true);
       } else {
         const prevIndex = currentIndex === 0 ? currentPlaylist.length - 1 : currentIndex - 1;
         setCurrentIndex(prevIndex);
@@ -317,6 +426,16 @@ export default function App() {
         progress={progress}
         currentTime={currentTime}
         duration={duration}
+        isShuffle={isShuffle}
+        onToggleShuffle={() => setIsShuffle(prev => !prev)}
+        repeatMode={repeatMode}
+        onToggleRepeat={() => {
+          setRepeatMode(prev => {
+            if (prev === 'none') return 'all';
+            if (prev === 'all') return 'one';
+            return 'none';
+          });
+        }}
         onPlayPause={handlePlayPause}
         onSeek={handleSeek}
         onNext={handleNext}

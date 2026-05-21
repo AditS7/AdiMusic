@@ -1,5 +1,5 @@
-import React from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown, Share2, Shuffle, Repeat } from 'lucide-react';
 import { Song } from '../data';
 
 interface PlayerProps {
@@ -9,6 +9,10 @@ interface PlayerProps {
   currentTime: number;
   duration: number;
   volume: number;
+  isShuffle: boolean;
+  onToggleShuffle: () => void;
+  repeatMode: 'none' | 'all' | 'one';
+  onToggleRepeat: () => void;
   onPlayPause: () => void;
   onSeek: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNext: () => void;
@@ -32,6 +36,10 @@ export const Player: React.FC<PlayerProps> = ({
   currentTime,
   duration,
   volume,
+  isShuffle,
+  onToggleShuffle,
+  repeatMode,
+  onToggleRepeat,
   onPlayPause,
   onSeek,
   onNext,
@@ -40,6 +48,19 @@ export const Player: React.FC<PlayerProps> = ({
   isMobilePlayerOpen,
   setIsMobilePlayerOpen,
 }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!currentSong) return;
+    const url = `${window.location.origin}/album/${encodeURIComponent(currentSong.album)}/song/${encodeURIComponent(currentSong.id)}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
   return (
     <>
       <div 
@@ -80,6 +101,14 @@ export const Player: React.FC<PlayerProps> = ({
       <div className="flex flex-col items-center w-[50%] md:w-1/3 max-w-xl">
         <div className="flex items-center space-x-4 md:space-x-6 mb-1 md:mb-2">
           <button 
+            onClick={(e) => { e.stopPropagation(); onToggleShuffle(); }} 
+            disabled={!currentSong} 
+            className={`transition group active:scale-95 disabled:opacity-50 disabled:hover:text-neutral-400 ${isShuffle ? 'text-green-500 hover:text-green-400' : 'text-neutral-400 hover:text-white'}`}
+            title={isShuffle ? "Shuffle on" : "Shuffle off"}
+          >
+            <Shuffle className="w-5 h-5" />
+          </button>
+          <button 
             onClick={(e) => { e.stopPropagation(); onPrevious(); }} 
             disabled={!currentSong} 
             className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group"
@@ -106,6 +135,19 @@ export const Player: React.FC<PlayerProps> = ({
             className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group"
           >
             <SkipForward className="w-5 h-5 group-active:scale-95" />
+          </button>
+          <button 
+            onClick={(e) => { e.stopPropagation(); onToggleRepeat(); }} 
+            disabled={!currentSong} 
+            className={`relative transition group active:scale-95 disabled:opacity-50 disabled:hover:text-neutral-400 ${repeatMode !== 'none' ? 'text-green-500 hover:text-green-400' : 'text-neutral-400 hover:text-white'}`}
+            title={repeatMode === 'none' ? 'Repeat off' : repeatMode === 'all' ? 'Repeat all' : 'Repeat one'}
+          >
+            <Repeat className="w-5 h-5" />
+            {repeatMode === 'one' && (
+              <span className="absolute -top-1.5 -right-1.5 text-[8px] font-extrabold bg-green-500 text-black border border-black rounded-full w-3.5 h-3.5 flex items-center justify-center">
+                1
+              </span>
+            )}
           </button>
         </div>
         
@@ -178,10 +220,21 @@ export const Player: React.FC<PlayerProps> = ({
             <div className="shrink-0 flex flex-col">
               {/* Song Info */}
               <div className="flex items-center justify-between mb-6">
-                <div className="flex flex-col overflow-hidden pr-4">
+                <div className="flex flex-col overflow-hidden pr-4 flex-1">
                   <h2 className="text-2xl font-bold text-white truncate mb-1">{currentSong.title}</h2>
                   <p className="text-lg text-neutral-400 truncate">{currentSong.artist}</p>
                 </div>
+                <button
+                  onClick={handleShare}
+                  className="flex items-center justify-center text-neutral-400 hover:text-white transition p-2.5 bg-neutral-800/40 active:bg-neutral-800 rounded-full w-12 h-12 flex-shrink-0"
+                  title="Share Song"
+                >
+                  {copied ? (
+                    <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider">Copied</span>
+                  ) : (
+                    <Share2 className="w-6 h-6" />
+                  )}
+                </button>
               </div>
 
               {/* Progress */}
@@ -206,13 +259,22 @@ export const Player: React.FC<PlayerProps> = ({
               </div>
 
               {/* Controls */}
-              <div className="flex items-center justify-center gap-10 mt-4 sm:mt-6 pb-4 sm:pb-8">
-                <button onClick={onPrevious} className="text-white active:scale-95 transition">
-                  <SkipBack className="w-10 h-10 fill-white" />
+              <div className="flex items-center justify-between px-4 mt-4 sm:mt-6 pb-4 sm:pb-8 w-full max-w-sm mx-auto">
+                <button 
+                  onClick={onToggleShuffle} 
+                  disabled={!currentSong}
+                  className={`transition active:scale-95 disabled:opacity-50 ${isShuffle ? 'text-green-500' : 'text-neutral-400 hover:text-white'}`}
+                  title={isShuffle ? "Shuffle on" : "Shuffle off"}
+                >
+                  <Shuffle className="w-6 h-6" />
+                </button>
+                <button onClick={onPrevious} disabled={!currentSong} className="text-white active:scale-95 disabled:opacity-50 transition">
+                  <SkipBack className="w-8 h-8 fill-white" />
                 </button>
                 <button
                   onClick={onPlayPause}
-                  className="w-16 h-16 flex items-center justify-center bg-white text-black rounded-full active:scale-95 transition"
+                  disabled={!currentSong}
+                  className="w-16 h-16 flex items-center justify-center bg-white text-black rounded-full active:scale-95 disabled:opacity-50 transition"
                 >
                   {isPlaying ? (
                      <Pause className="w-8 h-8 fill-black" />
@@ -220,8 +282,21 @@ export const Player: React.FC<PlayerProps> = ({
                      <Play className="w-8 h-8 fill-black translate-x-[2px]" />
                   )}
                 </button>
-                <button onClick={onNext} className="text-white active:scale-95 transition">
-                  <SkipForward className="w-10 h-10 fill-white" />
+                <button onClick={onNext} disabled={!currentSong} className="text-white active:scale-95 disabled:opacity-50 transition">
+                  <SkipForward className="w-8 h-8 fill-white" />
+                </button>
+                <button 
+                  onClick={onToggleRepeat} 
+                  disabled={!currentSong}
+                  className={`relative p-1 transition active:scale-95 disabled:opacity-50 ${repeatMode !== 'none' ? 'text-green-500' : 'text-neutral-400 hover:text-white'}`}
+                  title={repeatMode === 'none' ? 'Repeat off' : repeatMode === 'all' ? 'Repeat all' : 'Repeat one'}
+                >
+                  <Repeat className="w-6 h-6" />
+                  {repeatMode === 'one' && (
+                    <span className="absolute -top-1 -right-1 text-[8px] font-extrabold bg-green-500 text-black border border-black rounded-full w-3.5 h-3.5 flex items-center justify-center">
+                      1
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
