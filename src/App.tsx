@@ -118,8 +118,8 @@ export default function App() {
 
   // Initialize audio element
   useEffect(() => {
-    audioRef.current = new Audio();
     const audio = audioRef.current;
+    if (!audio) return;
     audio.volume = volume;
 
     const updateTime = () => {
@@ -152,7 +152,6 @@ export default function App() {
       
       if (isSrcChanged) {
         audioRef.current.src = currentSong.audioUrl;
-        audioRef.current.load();
         setCurrentTime(0);
         setProgress(0);
       }
@@ -211,7 +210,6 @@ export default function App() {
       if (audioRef.current) {
         if (audioRef.current.src !== firstSong.audioUrl && audioRef.current.getAttribute('src') !== firstSong.audioUrl) {
           audioRef.current.src = firstSong.audioUrl;
-          audioRef.current.load();
         }
         audioRef.current.play().catch(console.error);
       }
@@ -249,7 +247,6 @@ export default function App() {
         } else {
           if (audioRef.current) {
             audioRef.current.src = currentPlaylist[nextIndex].audioUrl;
-            audioRef.current.load();
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(nextIndex);
@@ -285,7 +282,6 @@ export default function App() {
         } else {
           if (audioRef.current) {
             audioRef.current.src = currentPlaylist[nextIndex].audioUrl;
-            audioRef.current.load();
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(nextIndex);
@@ -320,7 +316,6 @@ export default function App() {
         } else {
           if (audioRef.current) {
             audioRef.current.src = currentPlaylist[prevIndex].audioUrl;
-            audioRef.current.load();
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(prevIndex);
@@ -339,7 +334,6 @@ export default function App() {
         } else {
           if (audioRef.current) {
             audioRef.current.src = currentPlaylist[prevIndex].audioUrl;
-            audioRef.current.load();
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(prevIndex);
@@ -382,7 +376,6 @@ export default function App() {
       } else {
         if (audioRef.current) {
           audioRef.current.src = album.songs[0].audioUrl;
-          audioRef.current.load();
           audioRef.current.play().catch(console.error);
         }
         setCurrentPlaylist(album.songs);
@@ -403,7 +396,6 @@ export default function App() {
     } else {
       if (audioRef.current) {
         audioRef.current.src = song.audioUrl;
-        audioRef.current.load();
         audioRef.current.play().catch(console.error);
       }
       setCurrentSong(song);
@@ -447,6 +439,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-[100dvh] bg-black text-white font-sans overflow-hidden">
+      <audio ref={audioRef} preload="auto" />
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar - Desktop Only */}
         <div className="hidden md:flex flex-col w-64 bg-black p-6 gap-6">

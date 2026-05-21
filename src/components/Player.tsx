@@ -67,7 +67,7 @@ export const Player: React.FC<PlayerProps> = ({
       .then(color => {
         if (isMounted) setDominantColor(color.rgba);
       })
-      .catch(e => {
+      .catch(() => {
         // Silently fail if proxy or image fails
         if (isMounted) setDominantColor('rgba(38, 38, 38, 1)');
       });
