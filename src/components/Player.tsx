@@ -209,11 +209,23 @@ export const Player: React.FC<PlayerProps> = ({
 
             {/* Artwork */}
             <div className="flex-1 flex items-center justify-center min-h-0 w-full mb-6 mt-2">
-              <img 
-                src={currentSong.coverUrl} 
-                alt={currentSong.title} 
-                className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl" 
-              />
+              {currentSong.canvasUrl ? (
+                <video 
+                  src={currentSong.canvasUrl} 
+                  poster={currentSong.coverUrl} 
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl bg-neutral-900" 
+                />
+              ) : (
+                <img 
+                  src={currentSong.coverUrl} 
+                  alt={currentSong.title} 
+                  className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl" 
+                />
+              )}
             </div>
 
             {/* Bottom part */}

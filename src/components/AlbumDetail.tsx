@@ -91,11 +91,23 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        <img
-          src={album.coverUrl}
-          alt={album.title}
-          className="w-56 h-56 md:w-56 md:h-56 shadow-2xl rounded object-cover mb-4 md:mb-0 mt-4 md:mt-0"
-        />
+        {album.canvasUrl ? (
+          <video
+            src={album.canvasUrl}
+            poster={album.coverUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-56 h-56 md:w-56 md:h-56 shadow-2xl rounded object-cover mb-4 md:mb-0 mt-4 md:mt-0 bg-neutral-900"
+          />
+        ) : (
+          <img
+            src={album.coverUrl}
+            alt={album.title}
+            className="w-56 h-56 md:w-56 md:h-56 shadow-2xl rounded object-cover mb-4 md:mb-0 mt-4 md:mt-0"
+          />
+        )}
         <div className="md:ml-6 flex flex-col justify-end text-center md:text-left w-full">
           <p className="text-sm font-semibold mb-2 hidden md:block">{album.type || "Album"}</p>
           <h1 className="text-3xl md:text-6xl font-black mb-2 md:mb-4 tracking-tight drop-shadow-md">

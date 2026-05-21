@@ -6,6 +6,7 @@ export interface Song {
   audioUrl: string;
   duration?: string;
   coverUrl: string;
+  canvasUrl?: string;
 }
 
 export interface Album {
@@ -16,6 +17,7 @@ export interface Album {
   releaseYear: string;
   songs: Song[];
   type?: 'Album' | 'Single';
+  canvasUrl?: string;
 }
 
 export const albums: Album[] = [
@@ -238,6 +240,44 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Set%20me%20alive.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+      }
+    ]
+  },
+  {
+    id: "Eternal Flame",
+    title: "Eternal Flame",
+    artist: "Adit",
+    coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Eternal%20Flame/Eternal%20Flame.jpg",
+    releaseYear: "2025",
+    type: "Single",
+    songs: [
+      {
+        id: "Eternal Flame",
+        title: "Eternal Flame",
+        artist: "Adit",
+        album: "Eternal Flame",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Eternal%20Flame/Eternal%20Flame.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Eternal%20Flame/Eternal%20Flame.jpg",
+      }
+    ]
+  },
+  {
+    id: "Mr. Fahrenheit",
+    title: "Mr. Fahrenheit",
+    artist: "Adit",
+    coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.png",
+    releaseYear: "2025",
+    type: "Single",
+    canvasUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.mp4",
+    songs: [
+      {
+        id: "Mr. Fahrenheit",
+        title: "Mr. Fahrenheit",
+        artist: "Adit",
+        album: "Mr. Fahrenheit",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.png",
+        canvasUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.mp4",
       }
     ]
   }
