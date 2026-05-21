@@ -53,7 +53,7 @@ export const AlbumGrid: React.FC<AlbumGridProps> = ({
                 </div>
               </div>
               <h3 className="text-white font-semibold line-clamp-2 pb-1">{album.title}</h3>
-              <p className="text-sm text-neutral-400 truncate">{album.artist} • {album.releaseYear}</p>
+              <p className="text-sm text-neutral-400 truncate">{album.artist} • {album.type || "Album"} • {album.releaseYear}</p>
             </div>
           );
         })}

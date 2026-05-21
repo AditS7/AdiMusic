@@ -93,7 +93,7 @@ export const Search: React.FC<SearchProps> = ({
                         </div>
                       </div>
                       <h3 className="text-white font-semibold line-clamp-2 pb-1">{album.title}</h3>
-                      <p className="text-sm text-neutral-400 truncate">{album.artist}</p>
+                      <p className="text-sm text-neutral-400 truncate">{album.artist} • {album.type || "Album"}</p>
                     </div>
                   );
                 })}

@@ -15,6 +15,7 @@ export interface Album {
   coverUrl: string;
   releaseYear: string;
   songs: Song[];
+  type?: 'Album' | 'Single';
 }
 
 export const albums: Album[] = [
@@ -153,6 +154,24 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/After%20the%20Lights%20Go%20Out.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+      }
+    ]
+  },
+  {
+    id: "Still in Silence",
+    title: "Still in Silence",
+    artist: "Adit",
+    coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.jpg",
+    releaseYear: "2025",
+    type: "Single",
+    songs: [
+      {
+        id: "Still in Silence",
+        title: "Still in Silence",
+        artist: "Adit",
+        album: "Still in Silence",
+        audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.mp3",
+        coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.jpg",
       }
     ]
   }

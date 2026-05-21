@@ -97,12 +97,12 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
           className="w-56 h-56 md:w-56 md:h-56 shadow-2xl rounded object-cover mb-4 md:mb-0 mt-4 md:mt-0"
         />
         <div className="md:ml-6 flex flex-col justify-end text-center md:text-left w-full">
-          <p className="text-sm font-semibold mb-2 hidden md:block">Album</p>
+          <p className="text-sm font-semibold mb-2 hidden md:block">{album.type || "Album"}</p>
           <h1 className="text-3xl md:text-6xl font-black mb-2 md:mb-4 tracking-tight drop-shadow-md">
             {album.title}
           </h1>
           <p className="text-neutral-400 text-sm font-medium md:mb-0 mb-2 flex items-center justify-center md:justify-start gap-1">
-            <span className="text-white font-bold">{album.artist}</span> • {album.releaseYear} • {album.songs.length} songs{formatTotalDuration()}
+            <span className="text-white font-bold">{album.artist}</span> • {album.releaseYear} • {album.songs.length} {album.songs.length === 1 ? 'song' : 'songs'}{formatTotalDuration()}
           </p>
         </div>
       </div>
@@ -122,7 +122,7 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
         <button 
           onClick={(e) => handleShare(e, 'album')} 
           className="text-neutral-400 hover:text-white transition flex items-center justify-center w-10 h-10 rounded-full hover:bg-neutral-800"
-          title="Share Album"
+          title={album.type === 'Single' ? "Share Single" : "Share Album"}
         >
           {shared === 'album' ? <span className="text-sm font-medium text-green-500">Copied!</span> : <Share2 className="w-6 h-6" />}
         </button>
