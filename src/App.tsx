@@ -193,17 +193,18 @@ export default function App() {
 
   useEffect(() => {
     if ('mediaSession' in navigator && currentSong) {
+      const artworkType = currentSong.coverUrl.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
       navigator.mediaSession.metadata = new MediaMetadata({
         title: currentSong.title,
         artist: currentSong.artist,
         album: currentSong.album,
         artwork: [
-          { src: currentSong.coverUrl, sizes: '96x96', type: 'image/png' },
-          { src: currentSong.coverUrl, sizes: '128x128', type: 'image/png' },
-          { src: currentSong.coverUrl, sizes: '192x192', type: 'image/png' },
-          { src: currentSong.coverUrl, sizes: '256x256', type: 'image/png' },
-          { src: currentSong.coverUrl, sizes: '384x384', type: 'image/png' },
-          { src: currentSong.coverUrl, sizes: '512x512', type: 'image/png' },
+          { src: currentSong.coverUrl, sizes: '96x96', type: artworkType },
+          { src: currentSong.coverUrl, sizes: '128x128', type: artworkType },
+          { src: currentSong.coverUrl, sizes: '192x192', type: artworkType },
+          { src: currentSong.coverUrl, sizes: '256x256', type: artworkType },
+          { src: currentSong.coverUrl, sizes: '384x384', type: artworkType },
+          { src: currentSong.coverUrl, sizes: '512x512', type: artworkType },
         ]
       });
 
@@ -211,20 +212,8 @@ export default function App() {
       navigator.mediaSession.setActionHandler('pause', () => setIsPlaying(false));
       navigator.mediaSession.setActionHandler('previoustrack', handlePrevious);
       navigator.mediaSession.setActionHandler('nexttrack', handleNext);
-      navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-        if (audioRef.current) {
-          const skipTime = details.seekOffset || 10;
-          audioRef.current.currentTime = Math.max(audioRef.current.currentTime - skipTime, 0);
-          setCurrentTime(audioRef.current.currentTime);
-        }
-      });
-      navigator.mediaSession.setActionHandler('seekforward', (details) => {
-        if (audioRef.current && duration) {
-          const skipTime = details.seekOffset || 10;
-          audioRef.current.currentTime = Math.min(audioRef.current.currentTime + skipTime, duration);
-          setCurrentTime(audioRef.current.currentTime);
-        }
-      });
+      navigator.mediaSession.setActionHandler('seekbackward', null);
+      navigator.mediaSession.setActionHandler('seekforward', null);
       navigator.mediaSession.setActionHandler('seekto', (details) => {
         if (details.seekTime !== undefined && details.seekTime !== null && audioRef.current) {
           audioRef.current.currentTime = details.seekTime;
