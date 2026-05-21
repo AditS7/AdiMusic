@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Album, Song } from '../data';
 import { ArrowLeft, Play, Pause, Clock3, Share2 } from 'lucide-react';
+import { FastAverageColor } from 'fast-average-color';
 
 interface AlbumDetailProps {
   album: Album;
@@ -22,6 +23,32 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
   const [songDurations, setSongDurations] = useState<Record<string, string>>({});
   const [songDurationsSec, setSongDurationsSec] = useState<Record<string, number>>({});
   const [shared, setShared] = useState<string | null>(null);
+  const [dominantColor, setDominantColor] = useState<string>('rgba(38, 38, 38, 1)'); // Default to neutral-800
+
+  useEffect(() => {
+    let isMounted = true;
+    const fac = new FastAverageColor();
+    
+    // Proxy through wsrv.nl to avoid CORS issues with R2 buckets that don't have CORS configured
+    const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(album.coverUrl)}&w=100`; // Requesting a small width makes it faster
+
+    fac.getColorAsync(proxyUrl, {
+      crossOrigin: 'anonymous'
+    })
+      .then(color => {
+        if (isMounted) setDominantColor(color.rgba);
+      })
+      .catch(e => {
+        // Silently fail if proxy or image fails
+        if (isMounted) setDominantColor('rgba(38, 38, 38, 1)');
+      });
+      
+    return () => {
+      isMounted = false;
+      fac.destroy();
+    };
+  }, [album.coverUrl]);
+
 
   const handleShare = (e: React.MouseEvent, type: 'album' | 'song', id?: string) => {
     e.stopPropagation();
@@ -81,9 +108,15 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
   };
 
   return (
-    <div className="pb-8">
+    <div className="pb-8 bg-black min-h-screen relative">
+      {/* Dynamic Background Gradient overlay */}
+      <div 
+        className="absolute top-0 left-0 right-0 h-[400px] md:h-[500px] z-0 opacity-80 pointer-events-none transition-colors duration-700"
+        style={{ background: `linear-gradient(to bottom, ${dominantColor} 0%, rgba(0,0,0,0) 100%)` }}
+      />
+      
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-center md:items-end px-4 md:px-6 pt-12 md:pt-16 pb-6 bg-gradient-to-b from-neutral-800 to-black relative">
+      <div className="flex flex-col md:flex-row items-center md:items-end px-4 md:px-6 pt-12 md:pt-16 pb-6 relative z-10">
         <button
           onClick={onBack}
           className="absolute top-4 left-4 md:top-6 md:left-6 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center hover:bg-black/80 transition text-white"
@@ -91,23 +124,11 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        {album.canvasUrl ? (
-          <video
-            src={album.canvasUrl}
-            poster={album.coverUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-56 h-56 md:w-56 md:h-56 shadow-2xl rounded object-cover mb-4 md:mb-0 mt-4 md:mt-0 bg-neutral-900"
-          />
-        ) : (
-          <img
-            src={album.coverUrl}
-            alt={album.title}
-            className="w-56 h-56 md:w-56 md:h-56 shadow-2xl rounded object-cover mb-4 md:mb-0 mt-4 md:mt-0"
-          />
-        )}
+        <img
+          src={album.coverUrl}
+          alt={album.title}
+          className="w-56 h-56 md:w-56 md:h-56 shadow-2xl rounded object-cover mb-4 md:mb-0 mt-4 md:mt-0"
+        />
         <div className="md:ml-6 flex flex-col justify-end text-center md:text-left w-full">
           <p className="text-sm font-semibold mb-2 hidden md:block">{album.type || "Album"}</p>
           <h1 className="text-3xl md:text-6xl font-black mb-2 md:mb-4 tracking-tight drop-shadow-md">
@@ -120,7 +141,7 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
       </div>
 
       {/* Action Bar */}
-      <div className="px-4 md:px-6 py-2 md:py-4 flex items-center justify-center md:justify-start space-x-6">
+      <div className="px-4 md:px-6 py-2 md:py-4 flex items-center justify-center md:justify-start space-x-6 relative z-10">
         <button
            onClick={() => onSongClick(album.songs[0], 0)}
            className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-black hover:scale-105 hover:bg-green-400 transition shadow-xl"
@@ -141,7 +162,7 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
       </div>
 
       {/* Tracklist */}
-      <div className="px-2 md:px-6 mt-4">
+      <div className="px-2 md:px-6 mt-4 relative z-10">
         {/* Tracklist Header */}
         <div className="hidden md:grid grid-cols-[auto_1fr_auto_auto] gap-4 px-4 py-2 border-b border-neutral-800 text-neutral-400 text-sm font-medium mb-3">
           <div className="w-6 text-center">#</div>

@@ -193,11 +193,28 @@ export const Player: React.FC<PlayerProps> = ({
 
       {/* Full Screen Mobile Player */}
       <div 
-        className={`fixed inset-0 bg-gradient-to-b from-neutral-800 to-black z-[100] transition-transform duration-300 md:hidden overflow-hidden ${isMobilePlayerOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`fixed inset-0 bg-black z-[100] transition-transform duration-300 md:hidden overflow-hidden ${isMobilePlayerOpen ? 'translate-y-0' : 'translate-y-full'}`}
         style={{ height: '100dvh' }}
       >
+        {currentSong?.canvasUrl ? (
+          <>
+            <video 
+              src={currentSong.canvasUrl} 
+              poster={currentSong.coverUrl} 
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover z-0" 
+            />
+            <div className="absolute inset-0 bg-black/20 bg-gradient-to-t from-black/90 via-transparent to-black/60 z-10 pointer-events-none" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-neutral-800 to-black z-0 pointer-events-none" />
+        )}
+
         {currentSong && (
-          <div className="flex flex-col h-full px-6 pt-6 pb-8">
+          <div className="relative z-20 flex flex-col h-full px-6 pt-6 pb-8">
             {/* Header */}
             <div className="flex items-center justify-between shrink-0 mb-2">
               <button onClick={() => setIsMobilePlayerOpen(false)} className="text-white p-2 -ml-2">
@@ -208,25 +225,17 @@ export const Player: React.FC<PlayerProps> = ({
             </div>
 
             {/* Artwork */}
-            <div className="flex-1 flex items-center justify-center min-h-0 w-full mb-6 mt-2">
-              {currentSong.canvasUrl ? (
-                <video 
-                  src={currentSong.canvasUrl} 
-                  poster={currentSong.coverUrl} 
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl bg-neutral-900" 
-                />
-              ) : (
+            {!currentSong.canvasUrl ? (
+              <div className="flex-1 flex items-center justify-center min-h-0 w-full mb-6 mt-2">
                 <img 
                   src={currentSong.coverUrl} 
                   alt={currentSong.title} 
                   className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl" 
                 />
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="flex-1 min-h-0 w-full mb-6 mt-2"></div>
+            )}
 
             {/* Bottom part */}
             <div className="shrink-0 flex flex-col">

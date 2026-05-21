@@ -66,10 +66,20 @@ export default function App() {
           nextIndex = Math.floor(Math.random() * playlist.length);
         }
       }
-      setCurrentIndex(nextIndex);
-      setCurrentSong(playlist[nextIndex]);
-      setIsPlaying(true);
+      if (nextIndex === idx) {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(err => console.error(err));
+          setCurrentTime(0);
+          setProgress(0);
+        }
+      } else {
+        setCurrentIndex(nextIndex);
+        setCurrentSong(playlist[nextIndex]);
+        setIsPlaying(true);
+      }
     } else {
+      let nextIndex = idx;
       if (idx === playlist.length - 1) {
         if (loopMode === 'none') {
           setIsPlaying(false);
@@ -79,14 +89,24 @@ export default function App() {
           }
           setCurrentTime(0);
           setProgress(0);
+          return;
         } else {
-          setCurrentIndex(0);
-          setCurrentSong(playlist[0]);
-          setIsPlaying(true);
+          nextIndex = 0;
         }
       } else {
-        setCurrentIndex(idx + 1);
-        setCurrentSong(playlist[idx + 1]);
+        nextIndex = idx + 1;
+      }
+      
+      if (nextIndex === idx) {
+        if (audioRef.current) {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(err => console.error(err));
+          setCurrentTime(0);
+          setProgress(0);
+        }
+      } else {
+        setCurrentIndex(nextIndex);
+        setCurrentSong(playlist[nextIndex]);
         setIsPlaying(true);
       }
     }
@@ -202,10 +222,20 @@ export default function App() {
             nextIndex = Math.floor(Math.random() * currentPlaylist.length);
           }
         }
-        setCurrentIndex(nextIndex);
-        setCurrentSong(currentPlaylist[nextIndex]);
-        setIsPlaying(true);
+        if (nextIndex === currentIndex) {
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(err => console.error(err));
+            setCurrentTime(0);
+            setProgress(0);
+          }
+        } else {
+          setCurrentIndex(nextIndex);
+          setCurrentSong(currentPlaylist[nextIndex]);
+          setIsPlaying(true);
+        }
       } else {
+        let nextIndex = currentIndex;
         if (currentIndex === currentPlaylist.length - 1) {
           if (repeatMode === 'none') {
             setIsPlaying(false);
@@ -215,13 +245,22 @@ export default function App() {
             }
             setCurrentTime(0);
             setProgress(0);
+            return;
           } else {
-            setCurrentIndex(0);
-            setCurrentSong(currentPlaylist[0]);
-            setIsPlaying(true);
+            nextIndex = 0;
           }
         } else {
-          const nextIndex = currentIndex + 1;
+          nextIndex = currentIndex + 1;
+        }
+        
+        if (nextIndex === currentIndex) {
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(err => console.error(err));
+            setCurrentTime(0);
+            setProgress(0);
+          }
+        } else {
           setCurrentIndex(nextIndex);
           setCurrentSong(currentPlaylist[nextIndex]);
           setIsPlaying(true);
@@ -244,14 +283,32 @@ export default function App() {
             prevIndex = Math.floor(Math.random() * currentPlaylist.length);
           }
         }
-        setCurrentIndex(prevIndex);
-        setCurrentSong(currentPlaylist[prevIndex]);
-        setIsPlaying(true);
+        if (prevIndex === currentIndex) {
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(console.error);
+            setCurrentTime(0);
+            setProgress(0);
+          }
+        } else {
+          setCurrentIndex(prevIndex);
+          setCurrentSong(currentPlaylist[prevIndex]);
+          setIsPlaying(true);
+        }
       } else {
         const prevIndex = currentIndex === 0 ? currentPlaylist.length - 1 : currentIndex - 1;
-        setCurrentIndex(prevIndex);
-        setCurrentSong(currentPlaylist[prevIndex]);
-        setIsPlaying(true);
+        if (prevIndex === currentIndex) {
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(console.error);
+            setCurrentTime(0);
+            setProgress(0);
+          }
+        } else {
+          setCurrentIndex(prevIndex);
+          setCurrentSong(currentPlaylist[prevIndex]);
+          setIsPlaying(true);
+        }
       }
     }
   };
