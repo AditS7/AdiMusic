@@ -399,124 +399,129 @@ export default function App() {
   }, []); // Run on mount to check if direct song link
 
   return (
-    <div className="flex h-[100dvh] bg-black text-white font-sans overflow-hidden">
-      {/* Sidebar - Desktop Only */}
-      <div className="hidden md:flex flex-col w-64 bg-black p-6 gap-6">
-        <div className="space-y-4">
-          <Link to="/" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/' ? 'text-white' : 'text-neutral-400'}`}>
-            <Home className="w-6 h-6" /> Home
-          </Link>
-          <Link to="/search" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/search' ? 'text-white' : 'text-neutral-400'}`}>
-            <Search className="w-6 h-6" /> Search
-          </Link>
-        </div>
-        
-        <div className="mt-4 pt-4 border-t border-neutral-800">
-          <a href="#" className="flex items-center gap-4 font-semibold text-neutral-400 hover:text-white transition mb-4">
-            <Library className="w-6 h-6" /> Your Library
-          </a>
-          {/* Library list placeholder */}
-          <div className="space-y-3 overflow-y-auto max-h-64 scrollbar-hide">
-            {albums.map(album => (
-              <p 
-                key={`lib-${album.id}`}
-                onClick={() => handleAlbumClick(album)} 
-                className={`text-sm hover:text-white cursor-pointer truncate ${location.pathname.startsWith(`/album/${encodeURIComponent(album.id)}`) ? 'text-white font-medium' : 'text-neutral-400'}`}
-              >
-                {album.title}
-              </p>
-            ))}
+    <div className="flex flex-col h-[100dvh] bg-black text-white font-sans overflow-hidden">
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar - Desktop Only */}
+        <div className="hidden md:flex flex-col w-64 bg-black p-6 gap-6">
+          <div className="space-y-4">
+            <Link to="/" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/' ? 'text-white' : 'text-neutral-400'}`}>
+              <Home className="w-6 h-6" /> Home
+            </Link>
+            <Link to="/search" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/search' ? 'text-white' : 'text-neutral-400'}`}>
+              <Search className="w-6 h-6" /> Search
+            </Link>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-neutral-800">
+            <a href="#" className="flex items-center gap-4 font-semibold text-neutral-400 hover:text-white transition mb-4">
+              <Library className="w-6 h-6" /> Your Library
+            </a>
+            {/* Library list placeholder */}
+            <div className="space-y-3 overflow-y-auto max-h-64 scrollbar-hide">
+              {albums.map(album => (
+                <p 
+                  key={`lib-${album.id}`}
+                  onClick={() => handleAlbumClick(album)} 
+                  className={`text-sm hover:text-white cursor-pointer truncate ${location.pathname.startsWith(`/album/${encodeURIComponent(album.id)}`) ? 'text-white font-medium' : 'text-neutral-400'}`}
+                >
+                  {album.title}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
+  
+        {/* Main Content */}
+        <div 
+          className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto mb-0 md:m-2"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          <Routes>
+            <Route path="/" element={
+              <AlbumGrid 
+                albums={albums} 
+                onAlbumClick={handleAlbumClick} 
+                onPlayAlbumClick={handlePlayAlbum}
+                currentSong={currentSong}
+                isPlaying={isPlaying}
+              />
+            } />
+            <Route path="/search" element={
+              <SearchView 
+                albums={albums} 
+                onAlbumClick={handleAlbumClick} 
+                onPlayAlbumClick={handlePlayAlbum}
+                onSongClick={(song, index, playlist) => handleSongClick(song, index, playlist)}
+                currentSong={currentSong}
+                isPlaying={isPlaying}
+              />
+            } />
+            <Route path="/album/:id" element={
+              <AlbumDetailWrapper 
+                albums={albums}
+                onBack={() => navigate(-1)} 
+                onSongClick={(song, index, albumSongs) => handleSongClick(song, index, albumSongs)}
+                currentSong={currentSong}
+                isPlaying={isPlaying}
+              />
+            } />
+            <Route path="/album/:id/song/:songId" element={
+              <AlbumDetailWrapper 
+                albums={albums}
+                onBack={() => navigate(-1)} 
+                onSongClick={(song, index, albumSongs) => handleSongClick(song, index, albumSongs)}
+                currentSong={currentSong}
+                isPlaying={isPlaying}
+              />
+            } />
+          </Routes>
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div 
-        className="flex-1 bg-neutral-900 md:bg-neutral-900 md:rounded-lg overflow-y-auto pb-[180px] md:pb-0 mb-0 md:mb-24 md:m-2"
-        style={{ WebkitOverflowScrolling: 'touch' }}
-      >
-        <Routes>
-          <Route path="/" element={
-            <AlbumGrid 
-              albums={albums} 
-              onAlbumClick={handleAlbumClick} 
-              onPlayAlbumClick={handlePlayAlbum}
-              currentSong={currentSong}
-              isPlaying={isPlaying}
-            />
-          } />
-          <Route path="/search" element={
-            <SearchView 
-              albums={albums} 
-              onAlbumClick={handleAlbumClick} 
-              onPlayAlbumClick={handlePlayAlbum}
-              onSongClick={(song, index, playlist) => handleSongClick(song, index, playlist)}
-              currentSong={currentSong}
-              isPlaying={isPlaying}
-            />
-          } />
-          <Route path="/album/:id" element={
-            <AlbumDetailWrapper 
-              albums={albums}
-              onBack={() => navigate(-1)} 
-              onSongClick={(song, index, albumSongs) => handleSongClick(song, index, albumSongs)}
-              currentSong={currentSong}
-              isPlaying={isPlaying}
-            />
-          } />
-          <Route path="/album/:id/song/:songId" element={
-            <AlbumDetailWrapper 
-              albums={albums}
-              onBack={() => navigate(-1)} 
-              onSongClick={(song, index, albumSongs) => handleSongClick(song, index, albumSongs)}
-              currentSong={currentSong}
-              isPlaying={isPlaying}
-            />
-          } />
-        </Routes>
-      </div>
-
-      {/* Sticky Player */}
-      <Player 
-        currentSong={currentSong}
-        isPlaying={isPlaying}
-        progress={progress}
-        currentTime={currentTime}
-        duration={duration}
-        isShuffle={isShuffle}
-        onToggleShuffle={() => setIsShuffle(prev => !prev)}
-        repeatMode={repeatMode}
-        onToggleRepeat={() => {
-          setRepeatMode(prev => {
-            if (prev === 'none') return 'all';
-            if (prev === 'all') return 'one';
-            return 'none';
-          });
-        }}
-        onPlayPause={handlePlayPause}
-        onSeek={handleSeek}
-        onNext={handleNext}
-        onPrevious={handlePrevious}
-        volume={volume}
-        onVolumeChange={handleVolumeChange}
-        isMobilePlayerOpen={isMobilePlayerOpen}
-        setIsMobilePlayerOpen={setIsMobilePlayerOpen}
-      />
-
-      {/* Mobile Bottom Nav */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] bg-neutral-900/95 backdrop-blur-md border-t border-neutral-800 flex justify-around items-center z-50 px-2 pb-safe">
-        <Link to="/" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
-          <Home className="w-6 h-6" />
-          <span className="text-[10px] font-medium leading-none">Home</span>
-        </Link>
-        <Link to="/search" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/search' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
-          <Search className="w-6 h-6" />
-          <span className="text-[10px] font-medium leading-none">Search</span>
-        </Link>
-        <button className="flex flex-col items-center gap-1.5 text-neutral-500 hover:text-white transition-colors">
-          <Library className="w-6 h-6" />
-          <span className="text-[10px] font-medium leading-none">Library</span>
-        </button>
+      {/* Bottom Control Section */}
+      <div className="shrink-0 flex flex-col z-50 bg-black">
+        {/* Sticky Player */}
+        <Player 
+          currentSong={currentSong}
+          isPlaying={isPlaying}
+          progress={progress}
+          currentTime={currentTime}
+          duration={duration}
+          isShuffle={isShuffle}
+          onToggleShuffle={() => setIsShuffle(prev => !prev)}
+          repeatMode={repeatMode}
+          onToggleRepeat={() => {
+            setRepeatMode(prev => {
+              if (prev === 'none') return 'all';
+              if (prev === 'all') return 'one';
+              return 'none';
+            });
+          }}
+          onPlayPause={handlePlayPause}
+          onSeek={handleSeek}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+          volume={volume}
+          onVolumeChange={handleVolumeChange}
+          isMobilePlayerOpen={isMobilePlayerOpen}
+          setIsMobilePlayerOpen={setIsMobilePlayerOpen}
+        />
+  
+        {/* Mobile Bottom Nav */}
+        <div className="md:hidden flex h-[64px] bg-neutral-900/95 backdrop-blur-md border-t border-neutral-800 justify-around items-center px-2 pb-safe shrink-0">
+          <Link to="/" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
+            <Home className="w-6 h-6" />
+            <span className="text-[10px] font-medium leading-none">Home</span>
+          </Link>
+          <Link to="/search" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/search' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
+            <Search className="w-6 h-6" />
+            <span className="text-[10px] font-medium leading-none">Search</span>
+          </Link>
+          <button className="flex flex-col items-center gap-1.5 text-neutral-500 hover:text-white transition-colors">
+            <Library className="w-6 h-6" />
+            <span className="text-[10px] font-medium leading-none">Library</span>
+          </button>
+        </div>
       </div>
     </div>
   );

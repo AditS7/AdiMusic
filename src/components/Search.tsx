@@ -39,7 +39,7 @@ export const Search: React.FC<SearchProps> = ({
     : [];
 
   return (
-    <div className="px-4 md:px-6 py-6 md:py-8 pb-32">
+    <div className="px-4 md:px-6 py-6 md:py-8 pb-6 md:pb-8">
       <div className="mb-6 md:mb-8">
         <div className="relative max-w-md w-full">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

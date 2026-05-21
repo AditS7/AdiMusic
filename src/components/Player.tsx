@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown, Share2, Shuffle, Repeat } from 'lucide-react';
 import { Song } from '../data';
+import { FastAverageColor } from 'fast-average-color';
 
 interface PlayerProps {
   currentSong: Song | null;
@@ -49,8 +50,36 @@ export const Player: React.FC<PlayerProps> = ({
   setIsMobilePlayerOpen,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [dominantColor, setDominantColor] = useState<string>('rgba(38, 38, 38, 1)'); // Default to neutral-800
+
+  useEffect(() => {
+    if (!currentSong?.coverUrl) return;
+    
+    let isMounted = true;
+    const fac = new FastAverageColor();
+    
+    // Proxy through wsrv.nl to avoid CORS issues
+    const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(currentSong.coverUrl)}&w=100`;
+
+    fac.getColorAsync(proxyUrl, {
+      crossOrigin: 'anonymous'
+    })
+      .then(color => {
+        if (isMounted) setDominantColor(color.rgba);
+      })
+      .catch(e => {
+        // Silently fail if proxy or image fails
+        if (isMounted) setDominantColor('rgba(38, 38, 38, 1)');
+      });
+      
+    return () => {
+      isMounted = false;
+      fac.destroy();
+    };
+  }, [currentSong?.coverUrl]);
 
   const handleShare = (e: React.MouseEvent) => {
+
     e.stopPropagation();
     if (!currentSong) return;
     const url = `${window.location.origin}/album/${encodeURIComponent(currentSong.album)}/song/${encodeURIComponent(currentSong.id)}`;
@@ -69,7 +98,7 @@ export const Player: React.FC<PlayerProps> = ({
             setIsMobilePlayerOpen(true);
           }
         }}
-        className="fixed bottom-[64px] md:bottom-0 left-0 right-0 bg-neutral-900 border-t border-neutral-800 text-white p-2 md:p-4 h-16 md:h-24 flex items-center justify-between z-50 transition-transform"
+        className="relative bg-neutral-900 border-t border-neutral-800 text-white p-2 md:p-4 h-16 md:h-24 flex items-center justify-between z-50 transition-transform w-full"
         style={{ transform: isMobilePlayerOpen && window.innerWidth < 768 ? 'translateY(100%)' : 'translateY(0)' }}
       >
         {/* Left: Song Info */}
@@ -210,7 +239,12 @@ export const Player: React.FC<PlayerProps> = ({
             <div className="absolute inset-0 bg-black/20 bg-gradient-to-t from-black/90 via-transparent to-black/60 z-10 pointer-events-none" />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-b from-neutral-800 to-black z-0 pointer-events-none" />
+          <div 
+            className="absolute inset-0 z-0 pointer-events-none transition-colors duration-700" 
+            style={{
+              background: `linear-gradient(to bottom, ${dominantColor} 0%, rgba(0,0,0,1) 100%)`
+            }}
+          />
         )}
 
         {currentSong && (

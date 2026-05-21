@@ -108,7 +108,7 @@ export const AlbumDetail: React.FC<AlbumDetailProps> = ({
   };
 
   return (
-    <div className="pb-8 bg-black min-h-screen relative">
+    <div className="bg-black min-h-full pb-6 md:pb-8 relative w-full">
       {/* Dynamic Background Gradient overlay */}
       <div 
         className="absolute top-0 left-0 right-0 h-[400px] md:h-[500px] z-0 opacity-80 pointer-events-none transition-colors duration-700"
