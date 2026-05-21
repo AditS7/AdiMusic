@@ -148,7 +148,7 @@ export const LibraryView: React.FC<LibraryProps> = ({
         </div>
         
         <div className="flex flex-col justify-end text-center md:text-left w-full">
-          <p className="text-xs uppercase font-bold tracking-wider text-green-400 mb-2">Playlist</p>
+          <p className="text-xs uppercase font-bold tracking-wider text-green-400 mb-2">All Songs</p>
           <h1 className="text-3xl md:text-6xl font-black mb-3 tracking-tight drop-shadow-md text-white">
             Library
           </h1>

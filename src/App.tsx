@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Home, Library, Search } from 'lucide-react';
+import { Home, Library, Search, Disc } from 'lucide-react';
 import { Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { AlbumGrid } from './components/AlbumGrid';
 import { AlbumDetail } from './components/AlbumDetail';
@@ -485,8 +485,8 @@ export default function App() {
           </div>
           
           <div className="mt-4 pt-4 border-t border-neutral-800">
-            <h2 className="px-1 text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4">
-              Albums
+            <h2 className="px-1 text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4 flex items-center gap-2 select-none">
+              <Disc className="w-4 h-4 text-neutral-400" /> Albums
             </h2>
             {/* Library list placeholder */}
             <div className="space-y-3 overflow-y-auto max-h-64 scrollbar-hide">
