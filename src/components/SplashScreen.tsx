@@ -1,17 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Music } from 'lucide-react';
 
 export const SplashScreen: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (audioRef.current) {
-      // Autoplay might be blocked by browser without user interaction
-      audioRef.current.play().catch((err) => console.log('Audio autoplay prevented:', err));
-    }
-
     const timer = setTimeout(() => {
       setIsVisible(false);
     }, 2000);
@@ -28,7 +22,6 @@ export const SplashScreen: React.FC = () => {
           transition={{ duration: 0.5, ease: 'easeInOut' }}
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black"
         >
-          <audio ref={audioRef} src="/intro.mp3" preload="auto" />
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
