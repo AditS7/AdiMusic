@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Home, Library, Search, Disc } from 'lucide-react';
+import { Home, Library, Search, Disc, ListMusic } from 'lucide-react';
 import { Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { AlbumGrid } from './components/AlbumGrid';
 import { AlbumDetail } from './components/AlbumDetail';
@@ -480,7 +480,7 @@ export default function App() {
               <Search className="w-6 h-6" /> Search
             </Link>
             <Link to="/library" className={`flex items-center gap-4 font-semibold hover:text-white transition ${location.pathname === '/library' ? 'text-white' : 'text-neutral-400'}`}>
-              <Library className="w-6 h-6" /> Library
+              <ListMusic className="w-6 h-6" /> Playlist
             </Link>
           </div>
           
@@ -599,8 +599,8 @@ export default function App() {
             <span className="text-[10px] font-medium leading-none">Search</span>
           </Link>
           <Link to="/library" className={`flex flex-col items-center gap-1.5 ${location.pathname === '/library' ? 'text-white' : 'text-neutral-500'} hover:text-white transition-colors`}>
-            <Library className="w-6 h-6" />
-            <span className="text-[10px] font-medium leading-none">Library</span>
+            <ListMusic className="w-6 h-6" />
+            <span className="text-[10px] font-medium leading-none">Playlist</span>
           </Link>
         </div>
       </div>

@@ -144,7 +144,7 @@ export const LibraryView: React.FC<LibraryProps> = ({
         <div className="flex flex-col justify-end text-center md:text-left w-full">
           <p className="text-xs uppercase font-bold tracking-wider text-green-400 mb-2">All Songs</p>
           <h1 className="text-3xl md:text-6xl font-black mb-3 tracking-tight drop-shadow-md text-white">
-            Library
+            Playlist
           </h1>
           <p className="text-neutral-400 text-sm font-medium">
             <span className="text-white font-bold">{sortedSongs.length} songs</span> • Sorted by {sortBy === 'alphabetical' ? 'alphabetical title order' : 'album release date'}
@@ -262,8 +262,8 @@ export const LibraryView: React.FC<LibraryProps> = ({
 
           {sortedSongs.length === 0 && (
             <div className="text-center py-20 text-neutral-400">
-              <p className="text-lg font-semibold text-white mb-2">No songs found in Library</p>
-              <p>Add some albums first to populate your library.</p>
+              <p className="text-lg font-semibold text-white mb-2">No songs found in Playlist</p>
+              <p>Add some albums first to populate your playlist.</p>
             </div>
           )}
         </div>
