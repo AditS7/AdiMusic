@@ -11,6 +11,7 @@ import { AlbumDetail } from './components/AlbumDetail';
 import { Player } from './components/Player';
 import { Search as SearchView } from './components/Search';
 import { LibraryView } from './components/Library';
+import { SplashScreen } from './components/SplashScreen';
 import { albums, Album, Song } from './data';
 
 export default function App() {
@@ -467,9 +468,11 @@ export default function App() {
   }, []); // Run on mount to check if direct song link
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-black text-white font-sans overflow-hidden">
-      <audio ref={audioRef} preload="auto" />
-      <div className="flex-1 flex overflow-hidden">
+    <>
+      <SplashScreen />
+      <div className="flex flex-col h-[100dvh] bg-black text-white font-sans overflow-hidden">
+        <audio ref={audioRef} preload="auto" />
+        <div className="flex-1 flex overflow-hidden">
         {/* Sidebar - Desktop Only */}
         <div className="hidden md:flex flex-col w-64 bg-black p-6 gap-6">
           <div className="space-y-4">
@@ -604,7 +607,8 @@ export default function App() {
           </Link>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 
