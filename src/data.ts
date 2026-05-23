@@ -191,7 +191,7 @@ export const albums: Album[] = [
         album: "Still in Silence",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.jpg",
-        lyrics: "When the lights go down\nAnd the crowd is gone\nI'm still here, still in silence.\nHearing my own heartbeat.\nWaiting for the dawn.",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Still%20in%20Silence.txt",
       }
     ]
   },
@@ -276,6 +276,7 @@ export const albums: Album[] = [
         album: "Eternal Flame",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Eternal%20Flame/Eternal%20Flame.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Eternal%20Flame/Eternal%20Flame.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Eternal%20Flame.txt",
       }
     ]
   },
