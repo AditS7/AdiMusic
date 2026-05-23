@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Music } from 'lucide-react';
 
 export const SplashScreen: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -28,9 +27,11 @@ export const SplashScreen: React.FC = () => {
             transition={{ duration: 0.6, ease: 'easeOut' }}
             className="flex flex-col items-center"
           >
-            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.4)] mb-6">
-              <Music className="w-12 h-12 text-black" />
-            </div>
+            <img 
+              src="/fav1.png" 
+              alt="Logo" 
+              className="w-24 h-24 rounded-full shadow-[0_0_40px_rgba(34,197,94,0.4)] mb-6 object-cover" 
+            />
             <motion.h1 
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
