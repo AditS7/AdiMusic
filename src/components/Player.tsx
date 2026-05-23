@@ -57,14 +57,23 @@ export const Player: React.FC<PlayerProps> = ({
   useEffect(() => {
     setFetchedLyrics(null);
     if (currentSong?.lyricsUrl) {
-      // Use local API proxy to bypass CORS
-      fetch(`/api/lyrics?url=${encodeURIComponent(currentSong.lyricsUrl)}`)
+      // Use codetabs proxy bypass CORS since Vercel static deployment does not run server.ts
+      fetch(`https://api.codetabs.com/v1/proxy?quest=${currentSong.lyricsUrl}`)
         .then((res) => {
           if (!res.ok) throw new Error('Network response was not ok');
           return res.text();
         })
         .then((text) => setFetchedLyrics(text))
-        .catch((err) => console.error('Failed to fetch lyrics:', err));
+        .catch((err) => {
+          console.error('Failed to fetch lyrics via codetabs, trying allorigins:', err);
+          fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(currentSong.lyricsUrl!)}`)
+            .then(res => {
+              if (!res.ok) throw new Error('Network response was not ok');
+              return res.text();
+            })
+            .then(text => setFetchedLyrics(text))
+            .catch(err => console.error('Failed to fetch lyrics completely:', err));
+        });
     } else if (currentSong?.lyrics) {
       setFetchedLyrics(currentSong.lyrics);
     }
