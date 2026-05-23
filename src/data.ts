@@ -7,6 +7,8 @@ export interface Song {
   duration?: string;
   coverUrl: string;
   canvasUrl?: string;
+  lyrics?: string;
+  lyricsUrl?: string;
 }
 
 export interface Album {
@@ -35,6 +37,7 @@ export const albums: Album[] = [
         album: "Woolwich to Brixton",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/London%20raised%20me.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Woolwich%20to%20Brixton/London%20raised%20me.txt"
       },
       {
         id: "Cold In The Ends",
@@ -43,6 +46,7 @@ export const albums: Album[] = [
         album: "Woolwich to Brixton",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Cold%20In%20The%20Ends.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Woolwich%20to%20Brixton/Cold%20in%20the%20ends.txt"
       },
       {
         id: "Off These Chains",
@@ -51,6 +55,7 @@ export const albums: Album[] = [
         album: "Woolwich to Brixton",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Off%20These%20Chains.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Woolwich%20to%20Brixton/off%20these%20chains.txt"
       },
       {
         id: "Late Shift Profits",
@@ -59,6 +64,7 @@ export const albums: Album[] = [
         album: "Woolwich to Brixton",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Late%20Shift%20Profits.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Woolwich%20to%20Brixton/Late%20shift%20profit.txt"
       },
       {
         id: "South of the River Riddim",
@@ -67,6 +73,7 @@ export const albums: Album[] = [
         album: "Woolwich to Brixton",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/South%20of%20the%20River%20Riddim.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Woolwich%20to%20Brixton/South%20of%20the%20river%20riddim.txt"
       },
       {
         id: "Cold Shoulders, Closed Heart",
@@ -75,6 +82,7 @@ export const albums: Album[] = [
         album: "Woolwich to Brixton",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Cold%20Shoulders%2C%20Closed%20Heart.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Woolwich%20to%20Brixton/Cold%20Shoulders%2C%20Closed%20Heart.txt"
       },
       {
         id: "Ice on Quiet Roads",
@@ -83,6 +91,7 @@ export const albums: Album[] = [
         album: "Woolwich to Brixton",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Ice%20on%20Quiet%20Roads.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Woolwich%20to%20Brixton/Woolwich%20To%20Brixton.png",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Woolwich%20to%20Brixton/ice%20on%20quiet%20road.txt"
       }
     ]
   },
@@ -100,6 +109,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2%20A.M.%20On%20Your%20Street.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/2%20A.M.%20On%20Your%20Street.txt",
       },
       {
         id: "Don't make me one of the girls",
@@ -108,6 +118,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Don't%20make%20me%20one%20of%20the%20girls.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/Don't%20make%20me%20one%20of%20the%20girls.txt",
       },
       {
         id: "Under My Skin",
@@ -116,6 +127,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Under%20My%20Skin.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/Under%20the%20skin.txt",
       },
       {
         id: "Lose Myself In You",
@@ -124,6 +136,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Lose%20Myself%20In%20You.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/Lose%20myself%20in%20you.txt",
       },
       {
         id: "No More Daylight",
@@ -132,6 +145,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/No%20More%20Daylight.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/No%20More%20Daylight.txt",
       },
       {
         id: "Late Night Edges",
@@ -140,6 +154,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Late%20Night%20Edges.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/Late%20night%20edges.txt",
       },
       {
         id: "Safe With You",
@@ -148,6 +163,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/Safe%20With%20You.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/Safe%20with%20you.txt",
       },
       {
         id: "After the Lights Go Out",
@@ -156,6 +172,7 @@ export const albums: Album[] = [
         album: "2 A.M. With Her",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/After%20the%20Lights%20Go%20Out.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/2%20A.M.%20With%20Her/2am.jpeg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/2%20A.M.%20With%20Her/After%20the%20lights%20go%20out.txt",
       }
     ]
   },
@@ -174,6 +191,7 @@ export const albums: Album[] = [
         album: "Still in Silence",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Still%20in%20Silence/Still%20in%20Silence.jpg",
+        lyrics: "When the lights go down\nAnd the crowd is gone\nI'm still here, still in silence.\nHearing my own heartbeat.\nWaiting for the dawn.",
       }
     ]
   },
@@ -440,6 +458,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.png",
         canvasUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Mr.%20Fahrenheit/Mr.%20Fahrenheit.mp4",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Mr.%20Fahrenheit.txt",
       }
     ]
   }

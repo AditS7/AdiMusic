@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown, Share2, Shuffle, Repeat } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown, Share2, Shuffle, Repeat, MessageSquareText } from 'lucide-react';
 import { Song } from '../data';
 import { FastAverageColor } from 'fast-average-color';
 
@@ -51,6 +51,24 @@ export const Player: React.FC<PlayerProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
   const [dominantColor, setDominantColor] = useState<string>('rgba(38, 38, 38, 1)'); // Default to neutral-800
+  const [showLyrics, setShowLyrics] = useState(false);
+  const [fetchedLyrics, setFetchedLyrics] = useState<string | null>(null);
+
+  useEffect(() => {
+    setFetchedLyrics(null);
+    if (currentSong?.lyricsUrl) {
+      // Use local API proxy to bypass CORS
+      fetch(`/api/lyrics?url=${encodeURIComponent(currentSong.lyricsUrl)}`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Network response was not ok');
+          return res.text();
+        })
+        .then((text) => setFetchedLyrics(text))
+        .catch((err) => console.error('Failed to fetch lyrics:', err));
+    } else if (currentSong?.lyrics) {
+      setFetchedLyrics(currentSong.lyrics);
+    }
+  }, [currentSong]);
 
   useEffect(() => {
     if (!currentSong?.coverUrl) return;
@@ -141,6 +159,7 @@ export const Player: React.FC<PlayerProps> = ({
             onClick={(e) => { e.stopPropagation(); onPrevious(); }} 
             disabled={!currentSong} 
             className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group"
+            title="Previous"
           >
             <SkipBack className="w-5 h-5 group-active:scale-95" />
           </button>
@@ -151,6 +170,7 @@ export const Player: React.FC<PlayerProps> = ({
             }}
             disabled={!currentSong}
             className="w-8 h-8 md:w-8 md:h-8 flex items-center justify-center bg-white text-black rounded-full hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed transition active:scale-95 shadow-md flex-shrink-0"
+            title={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
                <Pause className="w-4 h-4 fill-black" />
@@ -162,6 +182,7 @@ export const Player: React.FC<PlayerProps> = ({
             onClick={(e) => { e.stopPropagation(); onNext(); }} 
             disabled={!currentSong} 
             className="text-neutral-400 hover:text-white disabled:opacity-50 disabled:hover:text-neutral-400 transition group"
+            title="Next"
           >
             <SkipForward className="w-5 h-5 group-active:scale-95" />
           </button>
@@ -200,25 +221,61 @@ export const Player: React.FC<PlayerProps> = ({
         </div>
       </div>
 
-      {/* Right: Extra Controls (Volume) */}
+      {/* Right: Extra Controls (Volume & Lyrics) */}
       <div className="flex items-center justify-end w-1/3 space-x-3 text-neutral-400 hidden sm:flex">
-         <Volume2 className="w-5 h-5" />
-         <div className="w-24 group relative flex items-center h-4">
-           <input
-             type="range"
-             min="0"
-             max="1"
-             step="0.01"
-             value={volume}
-             onChange={onVolumeChange}
-             className="w-full h-1 bg-neutral-700 rounded-full appearance-none cursor-pointer outline-none group-hover:[&::-webkit-slider-thumb]:block [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:hidden z-10"
-             style={{
-               background: `linear-gradient(to right, #ffffff ${volume * 100}%, #404040 ${volume * 100}%)`
-             }}
-           />
+         <button
+           onClick={(e) => { e.stopPropagation(); setShowLyrics(!showLyrics); }}
+           className={`transition-colors hover:text-white ${showLyrics ? 'text-green-500 hover:text-green-400' : ''}`}
+           title="Lyrics"
+         >
+           <MessageSquareText className="w-5 h-5" />
+         </button>
+         <div className="flex items-center" title="Volume">
+           <Volume2 className="w-5 h-5 mr-3" />
+           <div className="w-24 group relative flex items-center h-4">
+             <input
+               type="range"
+               min="0"
+               max="1"
+               step="0.01"
+               value={volume}
+               onChange={onVolumeChange}
+               className="w-full h-1 bg-neutral-700 rounded-full appearance-none cursor-pointer outline-none group-hover:[&::-webkit-slider-thumb]:block [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:hidden z-10"
+               style={{
+                 background: `linear-gradient(to right, #ffffff ${volume * 100}%, #404040 ${volume * 100}%)`
+               }}
+             />
+           </div>
          </div>
       </div>
       </div>
+
+      {/* Desktop/Tablet Lyrics Overlay */}
+      {showLyrics && currentSong && (
+        <div 
+          className="fixed inset-0 z-40 bg-neutral-900 pb-24 px-8 pt-12 transition-opacity hidden sm:block pointer-events-auto"
+          style={{ height: '100dvh' }}
+        >
+           <div className="max-w-5xl mx-auto h-full flex mt-6">
+             <div className="w-1/3 shrink-0 flex flex-col pt-8">
+                <img src={currentSong.coverUrl} alt={currentSong.title} className="w-full aspect-square object-cover rounded-lg shadow-2xl mb-6" />
+                <h2 className="text-3xl font-black text-white mb-2">{currentSong.title}</h2>
+                <h3 className="text-xl font-medium text-neutral-400">{currentSong.artist}</h3>
+             </div>
+             <div className="w-2/3 pl-16 flex flex-col justify-start overflow-y-auto pb-32 pt-8 scrollbar-hide">
+                {fetchedLyrics ? (
+                   <p className="whitespace-pre-wrap text-[32px] md:text-[40px] font-bold leading-snug text-white tracking-tight">
+                     {fetchedLyrics}
+                   </p>
+                ) : (
+                   <div className="flex bg-neutral-800/40 rounded-xl p-8 items-center justify-center mt-12 w-full max-w-lg mx-auto">
+                     <p className="text-neutral-400 text-lg font-medium">Looks like we don't have the lyrics for this song.</p>
+                   </div>
+                )}
+             </div>
+           </div>
+        </div>
+      )}
 
       {/* Full Screen Mobile Player */}
       <div 
@@ -255,11 +312,29 @@ export const Player: React.FC<PlayerProps> = ({
                 <ChevronDown className="w-8 h-8" />
               </button>
               <span className="text-[10px] sm:text-xs font-bold tracking-widest text-white uppercase text-center truncate px-2">{currentSong.album}</span>
-              <div className="w-8 h-8 shrink-0"></div>
+              <button 
+                onClick={() => setShowLyrics(!showLyrics)}
+                className={`w-8 h-8 flex shrink-0 items-center justify-center transition-colors ${showLyrics ? 'text-green-500' : 'text-neutral-300'}`}
+                title="Lyrics"
+              >
+                <MessageSquareText className="w-6 h-6" />
+              </button>
             </div>
 
-            {/* Artwork */}
-            {!currentSong.canvasUrl ? (
+            {/* Artwork / Lyrics */}
+            {showLyrics ? (
+               <div className="flex-1 flex flex-col min-h-0 w-full mb-6 mt-4 overflow-y-auto scrollbar-hide">
+                 {fetchedLyrics ? (
+                   <p className="whitespace-pre-wrap text-2xl font-bold leading-relaxed text-white tracking-tight pb-4">
+                     {fetchedLyrics}
+                   </p>
+                 ) : (
+                   <div className="flex-1 flex items-center justify-center text-center">
+                     <p className="text-neutral-400 text-base font-medium">Looks like we don't have the lyrics for this song.</p>
+                   </div>
+                 )}
+               </div>
+            ) : !currentSong.canvasUrl ? (
               <div className="flex-1 flex items-center justify-center min-h-0 w-full mb-6 mt-2">
                 <img 
                   src={currentSong.coverUrl} 
