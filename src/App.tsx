@@ -412,7 +412,7 @@ export default function App() {
         setCurrentIndex(0);
         setCurrentSong(album.songs[0]);
         setIsPlaying(true);
-        if (window.innerWidth < 768) setIsMobilePlayerOpen(true);
+        openMobilePlayer();
       }
     }
   };
@@ -434,7 +434,38 @@ export default function App() {
         navigate(`/album/${encodeURIComponent(song.album)}/song/${encodeURIComponent(song.id)}`, { replace: true });
       }
     }
-    if (window.innerWidth < 768) setIsMobilePlayerOpen(true);
+    openMobilePlayer();
+  };
+
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (e.state?.mobilePlayer) {
+        setIsMobilePlayerOpen(true);
+      } else {
+        setIsMobilePlayerOpen(false);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const openMobilePlayer = () => {
+    if (window.innerWidth < 768 && !isMobilePlayerOpen) {
+      window.history.pushState({ mobilePlayer: true }, "");
+      setIsMobilePlayerOpen(true);
+    }
+  };
+
+  const closeMobilePlayer = () => {
+    if (isMobilePlayerOpen) {
+      if (window.history.state?.lyrics) {
+        window.history.go(-2);
+      } else if (window.history.state?.mobilePlayer) {
+        window.history.back();
+      } else {
+        setIsMobilePlayerOpen(false);
+      }
+    }
   };
 
   useEffect(() => {
@@ -588,7 +619,7 @@ export default function App() {
           volume={volume}
           onVolumeChange={handleVolumeChange}
           isMobilePlayerOpen={isMobilePlayerOpen}
-          setIsMobilePlayerOpen={setIsMobilePlayerOpen}
+          setIsMobilePlayerOpen={(open) => open ? openMobilePlayer() : closeMobilePlayer()}
         />
   
         {/* Mobile Bottom Nav */}
