@@ -55,6 +55,32 @@ export const Player: React.FC<PlayerProps> = ({
   const [fetchedLyrics, setFetchedLyrics] = useState<string | null>(null);
 
   useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (e.state?.lyrics) {
+        setShowLyrics(true);
+      } else {
+        setShowLyrics(false);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const toggleLyrics = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (showLyrics) {
+      if (window.history.state?.lyrics) {
+        window.history.back();
+      } else {
+        setShowLyrics(false);
+      }
+    } else {
+      window.history.pushState({ lyrics: true }, "");
+      setShowLyrics(true);
+    }
+  };
+
+  useEffect(() => {
     setFetchedLyrics(null);
     if (currentSong?.lyricsUrl) {
       // Use codetabs proxy bypass CORS since Vercel static deployment does not run server.ts
@@ -233,7 +259,7 @@ export const Player: React.FC<PlayerProps> = ({
       {/* Right: Extra Controls (Volume & Lyrics) */}
       <div className="flex items-center justify-end w-1/3 space-x-3 text-neutral-400 hidden sm:flex">
          <button
-           onClick={(e) => { e.stopPropagation(); setShowLyrics(!showLyrics); }}
+           onClick={toggleLyrics}
            className={`transition-colors hover:text-white ${showLyrics ? 'text-green-500 hover:text-green-400' : ''}`}
            title="Lyrics"
          >
@@ -322,7 +348,7 @@ export const Player: React.FC<PlayerProps> = ({
               </button>
               <span className="text-[10px] sm:text-xs font-bold tracking-widest text-white uppercase text-center truncate px-2">{currentSong.album}</span>
               <button 
-                onClick={() => setShowLyrics(!showLyrics)}
+                onClick={toggleLyrics}
                 className={`w-8 h-8 flex shrink-0 items-center justify-center transition-colors ${showLyrics ? 'text-green-500' : 'text-neutral-300'}`}
                 title="Lyrics"
               >
