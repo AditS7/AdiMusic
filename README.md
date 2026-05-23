@@ -24,7 +24,7 @@ A personal music streaming web app with a clean Spotify-inspired UI and real-tim
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/AdiMusic.git
+   git clone https://github.com/adits7/AdiMusic.git
    cd AdiMusic
    ```
 
