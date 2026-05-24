@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Home, Library, Search, Disc, ListMusic } from 'lucide-react';
+import { Home, Library, Search, Disc, ListMusic, Headphones, Sparkles } from 'lucide-react';
 import { Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { AlbumGrid } from './components/AlbumGrid';
 import { AlbumDetail } from './components/AlbumDetail';
@@ -13,6 +13,7 @@ import { Search as SearchView } from './components/Search';
 import { LibraryView } from './components/Library';
 import { SplashScreen } from './components/SplashScreen';
 import { albums, Album, Song } from './data';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
   const navigate = useNavigate();
@@ -30,6 +31,14 @@ export default function App() {
   const [isMobilePlayerOpen, setIsMobilePlayerOpen] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [repeatMode, setRepeatMode] = useState<'none' | 'all' | 'one'>('all');
+  const [isSpatial, setIsSpatial] = useState(false);
+  const [spatialToast, setSpatialToast] = useState<{ show: boolean; enabled: boolean } | null>(null);
+  const spatialTimeoutRef = useRef<any>(null);
+  
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const spatialBypassRef = useRef<GainNode | null>(null);
+  const spatialEffectRef = useRef<GainNode | null>(null);
+  const isAudioSetupRef = useRef(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isShuffleRef = useRef(false);
@@ -45,6 +54,12 @@ export default function App() {
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
   useEffect(() => { currentPlaylistRef.current = currentPlaylist; }, [currentPlaylist]);
   useEffect(() => { currentSongRef.current = currentSong; }, [currentSong]);
+
+  useEffect(() => {
+    return () => {
+      if (spatialTimeoutRef.current) clearTimeout(spatialTimeoutRef.current);
+    };
+  }, []);
 
   const handleEndedTrigger = () => {
     const loopMode = repeatModeRef.current;
@@ -166,10 +181,10 @@ export default function App() {
     }
     
     if (currentSong && audioRef.current) {
-      const isSrcChanged = audioRef.current.getAttribute('src') !== currentSong.audioUrl && audioRef.current.src !== currentSong.audioUrl;
+      const isSrcChanged = audioRef.current.getAttribute('src') !== (currentSong.audioUrl + '?v=2') && audioRef.current.src !== (currentSong.audioUrl + '?v=2');
       
       if (isSrcChanged) {
-        audioRef.current.src = currentSong.audioUrl;
+        audioRef.current.src = currentSong.audioUrl + '?v=2';
         setCurrentTime(0);
         setProgress(0);
       }
@@ -234,12 +249,96 @@ export default function App() {
     }
   }, [currentSong, currentIndex, currentPlaylist]);
 
+  const initWebAudio = () => {
+    if (isAudioSetupRef.current || !audioRef.current) return;
+    isAudioSetupRef.current = true;
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      audioContextRef.current = ctx;
+      const source = ctx.createMediaElementSource(audioRef.current);
+      
+      const bypassGain = ctx.createGain();
+      bypassGain.gain.value = 1;
+      
+      const effectGain = ctx.createGain();
+      effectGain.gain.value = 0;
+      
+      // Basic stereo widening
+      const splitter = ctx.createChannelSplitter(2);
+      const merger = ctx.createChannelMerger(2);
+      
+      const delayL = ctx.createDelay();
+      const delayR = ctx.createDelay();
+      delayL.delayTime.value = 0.015;
+      delayR.delayTime.value = 0.025;
+      
+      const gainLtoR = ctx.createGain(); gainLtoR.gain.value = 0.4;
+      const gainRtoL = ctx.createGain(); gainRtoL.gain.value = 0.4;
+      
+      const makeupGain = ctx.createGain();
+      makeupGain.gain.value = 1.2;
+      
+      source.connect(bypassGain);
+      bypassGain.connect(ctx.destination);
+      
+      source.connect(effectGain);
+      effectGain.connect(splitter);
+      
+      splitter.connect(merger, 0, 0); // L -> L
+      splitter.connect(delayL, 0);
+      delayL.connect(gainLtoR);
+      gainLtoR.connect(merger, 0, 1); // Delayed L -> R
+      
+      splitter.connect(merger, 1, 1); // R -> R
+      splitter.connect(delayR, 1);
+      delayR.connect(gainRtoL);
+      gainRtoL.connect(merger, 0, 0); // Delayed R -> L
+      
+      merger.connect(makeupGain);
+      makeupGain.connect(ctx.destination);
+      
+      spatialBypassRef.current = bypassGain;
+      spatialEffectRef.current = effectGain;
+    } catch (e) {
+      console.error("Web Audio API setup failed", e);
+    }
+  };
+
+  const handleToggleSpatial = () => {
+    initWebAudio();
+    setIsSpatial(prev => {
+      const next = !prev;
+      if (spatialBypassRef.current && spatialEffectRef.current) {
+         spatialBypassRef.current.gain.setTargetAtTime(next ? 0 : 1, audioContextRef.current?.currentTime || 0, 0.1);
+         spatialEffectRef.current.gain.setTargetAtTime(next ? 1 : 0, audioContextRef.current?.currentTime || 0, 0.1);
+      }
+      
+      // Set spatial sound toggle toast
+      if (spatialTimeoutRef.current) {
+        clearTimeout(spatialTimeoutRef.current);
+      }
+      
+      setSpatialToast({ show: true, enabled: next });
+      
+      spatialTimeoutRef.current = setTimeout(() => {
+        setSpatialToast(null);
+      }, 2500);
+
+      return next;
+    });
+    if (audioContextRef.current?.state === 'suspended') {
+       audioContextRef.current.resume();
+    }
+  };
+
   const handlePlayPause = () => {
     if (!currentSong && currentPlaylist.length > 0) {
       const firstSong = currentPlaylist[0];
       if (audioRef.current) {
-        if (audioRef.current.src !== firstSong.audioUrl && audioRef.current.getAttribute('src') !== firstSong.audioUrl) {
-          audioRef.current.src = firstSong.audioUrl;
+        if (audioRef.current.src !== firstSong.audioUrl + '?v=2' && audioRef.current.getAttribute('src') !== firstSong.audioUrl + '?v=2') {
+          audioRef.current.src = firstSong.audioUrl + '?v=2';
         }
         audioRef.current.play().catch(console.error);
       }
@@ -276,7 +375,7 @@ export default function App() {
           }
         } else {
           if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[nextIndex].audioUrl;
+            audioRef.current.src = currentPlaylist[nextIndex].audioUrl + '?v=2';
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(nextIndex);
@@ -311,7 +410,7 @@ export default function App() {
           }
         } else {
           if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[nextIndex].audioUrl;
+            audioRef.current.src = currentPlaylist[nextIndex].audioUrl + '?v=2';
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(nextIndex);
@@ -345,7 +444,7 @@ export default function App() {
           }
         } else {
           if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[prevIndex].audioUrl;
+            audioRef.current.src = currentPlaylist[prevIndex].audioUrl + '?v=2';
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(prevIndex);
@@ -363,7 +462,7 @@ export default function App() {
           }
         } else {
           if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[prevIndex].audioUrl;
+            audioRef.current.src = currentPlaylist[prevIndex].audioUrl + '?v=2';
             audioRef.current.play().catch(console.error);
           }
           setCurrentIndex(prevIndex);
@@ -405,7 +504,7 @@ export default function App() {
         handlePlayPause();
       } else {
         if (audioRef.current) {
-          audioRef.current.src = album.songs[0].audioUrl;
+          audioRef.current.src = album.songs[0].audioUrl + '?v=2';
           audioRef.current.play().catch(console.error);
         }
         setCurrentPlaylist(album.songs);
@@ -425,7 +524,7 @@ export default function App() {
       handlePlayPause();
     } else {
       if (audioRef.current) {
-        audioRef.current.src = song.audioUrl;
+        audioRef.current.src = song.audioUrl + '?v=2';
         audioRef.current.play().catch(console.error);
       }
       setCurrentSong(song);
@@ -502,7 +601,7 @@ export default function App() {
     <>
       <SplashScreen />
       <div className="flex flex-col h-[100dvh] bg-black text-white font-sans overflow-hidden">
-        <audio ref={audioRef} preload="auto" />
+        <audio ref={audioRef} preload="auto" crossOrigin="anonymous" />
         <div className="flex-1 flex overflow-hidden">
         {/* Sidebar - Desktop Only */}
         <div className="hidden md:flex flex-col w-64 bg-black p-6 gap-6">
@@ -620,6 +719,8 @@ export default function App() {
           onVolumeChange={handleVolumeChange}
           isMobilePlayerOpen={isMobilePlayerOpen}
           setIsMobilePlayerOpen={(open) => open ? openMobilePlayer() : closeMobilePlayer()}
+          isSpatial={isSpatial}
+          onToggleSpatial={handleToggleSpatial}
         />
   
         {/* Mobile Bottom Nav */}
@@ -639,6 +740,40 @@ export default function App() {
         </div>
       </div>
       </div>
+
+      {/* Toast Notification for Spatial Audio */}
+      <AnimatePresence>
+        {spatialToast && spatialToast.show && (
+          <div className="fixed top-12 md:top-8 left-0 right-0 z-[1000] flex justify-center pointer-events-none px-4">
+            <motion.div
+              initial={{ opacity: 0, y: -30, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -15, scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 26 }}
+              className="flex items-center gap-3 bg-neutral-900/95 border border-neutral-800/80 backdrop-blur-md px-4 py-2.5 md:px-5 md:py-3.5 rounded-full shadow-2xl shadow-black/90 max-w-xs md:max-w-sm w-auto pointer-events-auto"
+            >
+              <div className={`flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full shrink-0 ${spatialToast.enabled ? 'bg-green-500/10 text-green-500' : 'bg-neutral-800 text-neutral-400'}`}>
+                <Headphones className={`w-4.5 h-4.5 md:w-5 md:h-5 ${spatialToast.enabled ? 'animate-pulse' : ''}`} />
+              </div>
+              <div className="flex flex-col min-w-0 pr-1">
+                <span className="text-xs md:text-sm font-semibold text-white tracking-wide leading-snug">
+                  Spatial Audio {spatialToast.enabled ? 'Enabled' : 'Disabled'}
+                </span>
+                <span className="text-[10px] md:text-xs text-neutral-400 font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px] md:max-w-none">
+                  {spatialToast.enabled ? (
+                    <span className="flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-green-400 inline shrink-0" />
+                      3D soundstage active
+                    </span>
+                  ) : (
+                    'Standard stereo active'
+                  )}
+                </span>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -210,6 +210,7 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Song%20of%20a%20breaking%20heart.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/All%20or%20Nothing/song%20of%20a%20breaking%20heart.txt",
       },
       {
         id: "I Will Take It All",
@@ -218,6 +219,7 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/I%20Will%20Take%20It%20All.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/All%20or%20Nothing/I%20will%20take%20it%20all.txt",
       },
       {
         id: "Far Apart",
@@ -226,6 +228,7 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Far%20Apart.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/All%20or%20Nothing/Far%20apart.txt",
       },
       {
         id: "Lighting Up the Heavens",
@@ -234,6 +237,7 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Lighting%20Up%20the%20Heavens.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/All%20or%20Nothing/lighting%20up%20the%20heavens.txt",
       },
       {
         id: "Underneath the Neon Glow",
@@ -242,6 +246,7 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Underneath%20the%20Neon%20Glow.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/All%20or%20Nothing/Underneath%20the%20neon%20glow.txt",
       },
       {
         id: "Between Love and Rejection",
@@ -250,6 +255,7 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Between%20Love%20and%20Rejection.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/All%20or%20Nothing/between%20love%20and%20rejection.txt",
       },
       {
         id: "Set me alive",
@@ -258,6 +264,7 @@ export const albums: Album[] = [
         album: "All or Nothing",
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/Set%20me%20alive.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/All%20Or%20Nothing/All%20or%20Nothing.jpg",
+        lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/All%20or%20Nothing/Set%20me%20alive.txt"
       }
     ]
   },

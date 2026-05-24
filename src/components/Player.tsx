@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown, Share2, Shuffle, Repeat, MessageSquareText } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, ChevronDown, Share2, Shuffle, Repeat, MessageSquareText, Headphones } from 'lucide-react';
 import { Song } from '../data';
 import { FastAverageColor } from 'fast-average-color';
 
@@ -21,6 +21,8 @@ interface PlayerProps {
   onVolumeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isMobilePlayerOpen: boolean;
   setIsMobilePlayerOpen: (open: boolean) => void;
+  isSpatial: boolean;
+  onToggleSpatial: () => void;
 }
 
 const formatTime = (time: number) => {
@@ -48,6 +50,8 @@ export const Player: React.FC<PlayerProps> = ({
   onVolumeChange,
   isMobilePlayerOpen,
   setIsMobilePlayerOpen,
+  isSpatial,
+  onToggleSpatial,
 }) => {
   const [copied, setCopied] = useState(false);
   const [dominantColor, setDominantColor] = useState<string>('rgba(38, 38, 38, 1)'); // Default to neutral-800
@@ -75,6 +79,9 @@ export const Player: React.FC<PlayerProps> = ({
         setShowLyrics(false);
       }
     } else {
+      if (window.innerWidth < 768) {
+        window.history.replaceState({ ...window.history.state, mobilePlayer: true }, "");
+      }
       window.history.pushState({ lyrics: true }, "");
       setShowLyrics(true);
     }
@@ -256,8 +263,15 @@ export const Player: React.FC<PlayerProps> = ({
         </div>
       </div>
 
-      {/* Right: Extra Controls (Volume & Lyrics) */}
+      {/* Right: Extra Controls (Volume & Lyrics & Spatial) */}
       <div className="flex items-center justify-end w-1/3 space-x-3 text-neutral-400 hidden sm:flex">
+         <button
+           onClick={(e) => { e.stopPropagation(); onToggleSpatial(); }}
+           className={`transition-colors hover:text-white ${isSpatial ? 'text-green-500 hover:text-green-400' : ''}`}
+           title="Spatial Audio"
+         >
+           <Headphones className="w-5 h-5" />
+         </button>
          <button
            onClick={toggleLyrics}
            className={`transition-colors hover:text-white ${showLyrics ? 'text-green-500 hover:text-green-400' : ''}`}
@@ -286,18 +300,18 @@ export const Player: React.FC<PlayerProps> = ({
       </div>
 
       {/* Desktop/Tablet Lyrics Overlay */}
-      {showLyrics && currentSong && (
-        <div 
-          className="fixed inset-0 z-40 bg-neutral-900 pb-24 px-8 pt-12 transition-opacity hidden sm:block pointer-events-auto"
-          style={{ height: '100dvh' }}
-        >
+      <div 
+        className={`fixed inset-0 z-40 bg-neutral-900 pb-24 px-8 pt-12 transition-opacity pointer-events-auto ${showLyrics && currentSong ? 'hidden sm:block' : 'hidden'}`}
+        style={{ height: '100dvh' }}
+      >
+        {currentSong && (
            <div className="max-w-5xl mx-auto h-full flex mt-6">
              <div className="w-1/3 shrink-0 flex flex-col pt-8">
                 <img src={currentSong.coverUrl} alt={currentSong.title} className="w-full aspect-square object-cover rounded-lg shadow-2xl mb-6" />
                 <h2 className="text-3xl font-black text-white mb-2">{currentSong.title}</h2>
                 <h3 className="text-xl font-medium text-neutral-400">{currentSong.artist}</h3>
              </div>
-             <div className="w-2/3 pl-16 flex flex-col justify-start overflow-y-auto pb-32 pt-8 scrollbar-hide">
+             <div key={currentSong.id} className="w-2/3 pl-16 flex flex-col justify-start overflow-y-auto pb-32 pt-8 scrollbar-hide">
                 {fetchedLyrics ? (
                    <p className="whitespace-pre-wrap text-[32px] md:text-[40px] font-bold leading-snug text-white tracking-tight">
                      {fetchedLyrics}
@@ -309,8 +323,8 @@ export const Player: React.FC<PlayerProps> = ({
                 )}
              </div>
            </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Full Screen Mobile Player */}
       <div 
@@ -347,39 +361,46 @@ export const Player: React.FC<PlayerProps> = ({
                 <ChevronDown className="w-8 h-8" />
               </button>
               <span className="text-[10px] sm:text-xs font-bold tracking-widest text-white uppercase text-center truncate px-2">{currentSong.album}</span>
-              <button 
-                onClick={toggleLyrics}
-                className={`w-8 h-8 flex shrink-0 items-center justify-center transition-colors ${showLyrics ? 'text-green-500' : 'text-neutral-300'}`}
-                title="Lyrics"
-              >
-                <MessageSquareText className="w-6 h-6" />
-              </button>
+              <div className="flex items-center space-x-1">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onToggleSpatial(); }}
+                  className={`w-8 h-8 flex shrink-0 items-center justify-center transition-colors ${isSpatial ? 'text-green-500' : 'text-neutral-300'}`}
+                  title="Spatial Audio"
+                >
+                  <Headphones className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={toggleLyrics}
+                  className={`w-8 h-8 flex shrink-0 items-center justify-center transition-colors ${showLyrics ? 'text-green-500' : 'text-neutral-300'}`}
+                  title="Lyrics"
+                >
+                  <MessageSquareText className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Artwork / Lyrics */}
-            {showLyrics ? (
-               <div className="flex-1 flex flex-col min-h-0 w-full mb-6 mt-4 overflow-y-auto scrollbar-hide">
-                 {fetchedLyrics ? (
-                   <p className="whitespace-pre-wrap text-2xl font-bold leading-relaxed text-white tracking-tight pb-4">
-                     {fetchedLyrics}
-                   </p>
-                 ) : (
-                   <div className="flex-1 flex items-center justify-center text-center">
-                     <p className="text-neutral-400 text-base font-medium">Looks like we don't have the lyrics for this song.</p>
-                   </div>
-                 )}
-               </div>
-            ) : !currentSong.canvasUrl ? (
-              <div className="flex-1 flex items-center justify-center min-h-0 w-full mb-6 mt-2">
-                <img 
-                  src={currentSong.coverUrl} 
-                  alt={currentSong.title} 
-                  className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl" 
-                />
-              </div>
-            ) : (
-              <div className="flex-1 min-h-0 w-full mb-6 mt-2"></div>
-            )}
+            <div key={currentSong.id} className={`flex-1 flex flex-col min-h-0 w-full mb-6 mt-4 overflow-y-auto scrollbar-hide ${showLyrics ? '' : 'hidden'}`}>
+              {fetchedLyrics ? (
+                <p className="whitespace-pre-wrap text-2xl font-bold leading-relaxed text-white tracking-tight pb-4">
+                  {fetchedLyrics}
+                </p>
+              ) : (
+                <div className="flex-1 flex items-center justify-center text-center">
+                  <p className="text-neutral-400 text-base font-medium">Looks like we don't have the lyrics for this song.</p>
+                </div>
+              )}
+            </div>
+            
+            <div className={`flex-1 flex items-center justify-center min-h-0 w-full mb-6 mt-2 ${!showLyrics && !currentSong.canvasUrl ? '' : 'hidden'}`}>
+              <img 
+                src={currentSong.coverUrl} 
+                alt={currentSong.title} 
+                className="w-full h-full max-w-full max-h-full aspect-square flex-shrink object-cover rounded-lg shadow-2xl" 
+              />
+            </div>
+
+            <div className={`flex-1 min-h-0 w-full mb-6 mt-2 ${!showLyrics && currentSong.canvasUrl ? '' : 'hidden'}`}></div>
 
             {/* Bottom part */}
             <div className="shrink-0 flex flex-col">
