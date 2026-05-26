@@ -46,9 +46,12 @@ export default function App() {
   const currentIndexRef = useRef(0);
   const currentPlaylistRef = useRef<Song[]>([]);
   const currentSongRef = useRef<Song | null>(null);
+  const isPlayingRef = useRef(false);
+  const playPromiseRef = useRef<Promise<void> | null>(null);
   const handleEndedTriggerRef = useRef<() => void>(() => {});
 
   // Synchronize state values to refs for the Audio callbacks
+  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
   useEffect(() => { isShuffleRef.current = isShuffle; }, [isShuffle]);
   useEffect(() => { repeatModeRef.current = repeatMode; }, [repeatMode]);
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
@@ -61,6 +64,52 @@ export default function App() {
     };
   }, []);
 
+  const safePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    
+    if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+
+    try {
+      const promise = audio.play();
+      playPromiseRef.current = promise;
+      if (promise !== undefined) {
+        promise.catch(e => {
+          if (e.name !== 'AbortError') {
+            console.error("Playback failed:", e);
+          }
+        });
+      }
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error("Playback error:", err);
+      }
+    }
+  };
+
+  const safePause = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    
+    if (playPromiseRef.current) {
+      playPromiseRef.current
+        .then(() => {
+          if (!isPlayingRef.current) {
+            audio.pause();
+          }
+        })
+        .catch(() => {
+          if (!isPlayingRef.current) {
+            audio.pause();
+          }
+        });
+    } else {
+      audio.pause();
+    }
+  };
+
   const handleEndedTrigger = () => {
     const loopMode = repeatModeRef.current;
     const shuffleOn = isShuffleRef.current;
@@ -72,7 +121,7 @@ export default function App() {
     if (loopMode === 'one') {
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(err => console.error(err));
+        safePlay();
         setCurrentTime(0);
         setProgress(0);
       }
@@ -86,7 +135,7 @@ export default function App() {
       if (nextIndex === idx) {
         if (audioRef.current) {
           audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(err => console.error(err));
+          safePlay();
           setCurrentTime(0);
           setProgress(0);
         }
@@ -101,7 +150,7 @@ export default function App() {
         if (loopMode === 'none') {
           setIsPlaying(false);
           if (audioRef.current) {
-            audioRef.current.pause();
+            safePause();
             audioRef.current.currentTime = 0;
           }
           setCurrentTime(0);
@@ -117,7 +166,7 @@ export default function App() {
       if (nextIndex === idx) {
         if (audioRef.current) {
           audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(err => console.error(err));
+          safePlay();
           setCurrentTime(0);
           setProgress(0);
         }
@@ -190,20 +239,9 @@ export default function App() {
       }
       
       if (isPlaying) {
-        if (audioRef.current.paused) {
-          const playPromise = audioRef.current.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(e => {
-              if (e.name !== 'AbortError') {
-                console.error("Playback failed", e);
-              }
-            });
-          }
-        }
+        safePlay();
       } else {
-        if (!audioRef.current.paused) {
-          audioRef.current.pause();
-        }
+        safePause();
       }
     }
   }, [currentSong, isPlaying]);
@@ -336,23 +374,12 @@ export default function App() {
   const handlePlayPause = () => {
     if (!currentSong && currentPlaylist.length > 0) {
       const firstSong = currentPlaylist[0];
-      if (audioRef.current) {
-        if (audioRef.current.src !== firstSong.audioUrl + '?v=2' && audioRef.current.getAttribute('src') !== firstSong.audioUrl + '?v=2') {
-          audioRef.current.src = firstSong.audioUrl + '?v=2';
-        }
-        audioRef.current.play().catch(console.error);
-      }
       setCurrentSong(firstSong);
       setIsPlaying(true);
       return;
     }
     
-    if (currentSong && audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(console.error);
-      }
+    if (currentSong) {
       setIsPlaying(!isPlaying);
     }
   };
@@ -369,15 +396,11 @@ export default function App() {
         if (nextIndex === currentIndex) {
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(err => console.error(err));
+            safePlay();
             setCurrentTime(0);
             setProgress(0);
           }
         } else {
-          if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[nextIndex].audioUrl + '?v=2';
-            audioRef.current.play().catch(console.error);
-          }
           setCurrentIndex(nextIndex);
           setCurrentSong(currentPlaylist[nextIndex]);
           setIsPlaying(true);
@@ -388,7 +411,7 @@ export default function App() {
           if (repeatMode === 'none') {
             setIsPlaying(false);
             if (audioRef.current) {
-              audioRef.current.pause();
+              safePause();
               audioRef.current.currentTime = 0;
             }
             setCurrentTime(0);
@@ -404,15 +427,11 @@ export default function App() {
         if (nextIndex === currentIndex) {
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(err => console.error(err));
+            safePlay();
             setCurrentTime(0);
             setProgress(0);
           }
         } else {
-          if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[nextIndex].audioUrl + '?v=2';
-            audioRef.current.play().catch(console.error);
-          }
           setCurrentIndex(nextIndex);
           setCurrentSong(currentPlaylist[nextIndex]);
           setIsPlaying(true);
@@ -426,6 +445,7 @@ export default function App() {
       if (currentTime > 3 && audioRef.current) {
         // If more than 3 seconds in, just restart song
         audioRef.current.currentTime = 0;
+        safePlay();
         setCurrentTime(0);
         setProgress(0);
       } else if (isShuffle) {
@@ -438,15 +458,11 @@ export default function App() {
         if (prevIndex === currentIndex) {
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(console.error);
+            safePlay();
             setCurrentTime(0);
             setProgress(0);
           }
         } else {
-          if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[prevIndex].audioUrl + '?v=2';
-            audioRef.current.play().catch(console.error);
-          }
           setCurrentIndex(prevIndex);
           setCurrentSong(currentPlaylist[prevIndex]);
           setIsPlaying(true);
@@ -456,15 +472,11 @@ export default function App() {
         if (prevIndex === currentIndex) {
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(console.error);
+            safePlay();
             setCurrentTime(0);
             setProgress(0);
           }
         } else {
-          if (audioRef.current) {
-            audioRef.current.src = currentPlaylist[prevIndex].audioUrl + '?v=2';
-            audioRef.current.play().catch(console.error);
-          }
           setCurrentIndex(prevIndex);
           setCurrentSong(currentPlaylist[prevIndex]);
           setIsPlaying(true);
@@ -503,10 +515,6 @@ export default function App() {
       if (isAlreadyPlayingThisAlbum && currentSong) {
         handlePlayPause();
       } else {
-        if (audioRef.current) {
-          audioRef.current.src = album.songs[0].audioUrl + '?v=2';
-          audioRef.current.play().catch(console.error);
-        }
         setCurrentPlaylist(album.songs);
         setCurrentIndex(0);
         setCurrentSong(album.songs[0]);
@@ -523,10 +531,6 @@ export default function App() {
     if (currentSong?.id === song.id) {
       handlePlayPause();
     } else {
-      if (audioRef.current) {
-        audioRef.current.src = song.audioUrl + '?v=2';
-        audioRef.current.play().catch(console.error);
-      }
       setCurrentSong(song);
       setIsPlaying(true);
       if (location.pathname.startsWith('/album/')) {

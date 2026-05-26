@@ -294,6 +294,7 @@ export const albums: Album[] = [
     coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
     releaseYear: "2025",
     type: "Album",
+    canvasUrl: "/celestial blaze.mp4",
     songs: [
       {
         id: "Alone Together",
@@ -303,6 +304,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Alone%20Together.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Alone%20together.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Follow You Anywhere",
@@ -312,6 +314,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Follow%20You%20Anywhere.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Follow%20you%20anywhere.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "The Devil in Disguise",
@@ -321,6 +324,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/The%20Devil%20in%20Disguise.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/The%20Devil%20in%20Disguise.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Somewhere between",
@@ -330,6 +334,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Somewhere%20between.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Somewhere%20between.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Fading Light",
@@ -339,6 +344,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Fading%20Light.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Fading%20light.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Leaving All Behind",
@@ -348,6 +354,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Leaving%20All%20Behind.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Leaving%20all%20behind.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Where You Used To Be",
@@ -357,6 +364,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Where%20You%20Used%20To%20Be.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Where%20you%20used%20to%20be.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "The Chosen One",
@@ -366,6 +374,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/The%20Chosen%20One.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/The%20chosen%20one.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "I Won't Let Go",
@@ -375,6 +384,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/I%20Won't%20Let%20Go.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/I%20won't%20let%20go.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Fade Into the Blue",
@@ -384,6 +394,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Fade%20Into%20the%20Blue.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Fade%20into%20the%20blue.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Velvet Rain",
@@ -393,6 +404,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Velvet%20Rain.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Velvet%20rain.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Your Truths are Lies",
@@ -402,6 +414,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Your%20Truths%20are%20Lies.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Your%20truth%20are%20lies.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Neon Dreams",
@@ -411,6 +424,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Neon%20Dreams.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Neon%20Dreams.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Into the Nightfall",
@@ -420,6 +434,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Into%20the%20Nightfall.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Into%20the%20nightfall.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "I Will Walk With You",
@@ -429,6 +444,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/I%20Will%20Walk%20With%20You.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/i%20will%20walk%20with%20you.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Lost Without Your Light",
@@ -438,6 +454,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Lost%20Without%20Your%20Light.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Lost%20without%20your%20light.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Unstoppable Heart",
@@ -447,6 +464,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Unstoppable%20Heart.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Unstoppable%20Heart.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Don't Let Me Fade Away",
@@ -456,6 +474,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Don%E2%80%99t%20Let%20Me%20Fade%20Away.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Don't%20let%20me%20fade%20away.txt",
+        canvasUrl: "/celestial blaze.mp4",
       },
       {
         id: "Phantom of Tomorrow",
@@ -465,6 +484,7 @@ export const albums: Album[] = [
         audioUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Phantom%20of%20Tomorrow.mp3",
         coverUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/Celestial%20Blaze/Celestial%20Blaze.jpg",
         lyricsUrl: "https://pub-6003e25bc91a40379fa70d99357abd1c.r2.dev/lyrics/Celestial%20Blaze/Phantom%20of%20Tomorrow.txt",
+        canvasUrl: "/celestial blaze.mp4",
       }
     ]
   },
